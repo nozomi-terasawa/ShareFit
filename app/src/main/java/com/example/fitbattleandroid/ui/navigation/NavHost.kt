@@ -22,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.ui.screen.LoginScreen
 import com.websarva.wings.android.myapplication.TopScreen
+import com.example.fitbattleandroid.ui.screen.MapScreen
 
 sealed class Screen(val route: String, val title: String) {
     object Map : Screen("map","Map")
@@ -82,10 +83,10 @@ fun Greeting() {
     ) { innerPadding ->
         NavHost(
             navController,
-            startDestination = Screen.Top.route,
+            startDestination = Screen.Map.route,
             Modifier.padding(innerPadding),
         ) {
-            composable(Screen.Map.route){ TopScreen(navController) }
+            composable(Screen.Map.route) { MapScreen() }
             composable(Screen.Top.route) { TopScreen(navController) }
             composable(Screen.Login.route) { LoginScreen(navController) }
         }
