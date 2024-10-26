@@ -39,7 +39,7 @@ class HealthConnectViewModel : ViewModel() {
             val totalCalorie = response.records.sumOf { (it.energy.inCalories / 1000).toInt() }
             _calorieUiState.value =
                 _calorieUiState.value.copy(
-                    calorie = totalCalorie.toString(),
+                    calorie = (totalCalorie * 0.001).toString(),
                 )
         } catch (e: Exception) {
             _calorieUiState.value = CalorieUiState("Error reading calorie data")
@@ -50,4 +50,3 @@ class HealthConnectViewModel : ViewModel() {
 data class CalorieUiState(
     val calorie: String,
 )
-
