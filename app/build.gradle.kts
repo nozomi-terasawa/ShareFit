@@ -59,7 +59,9 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.ui.text.google.fonts)
     implementation("io.coil-kt.coil3:coil-compose:3.0.0-rc01")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
