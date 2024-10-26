@@ -49,7 +49,9 @@ fun TopScreen(navController: NavController) {
             )
             Column {
                 Button(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate("login")
+                    },
                     shape = RoundedCornerShape(20.dp),
                     colors =
                         ButtonDefaults.buttonColors(
@@ -66,7 +68,9 @@ fun TopScreen(navController: NavController) {
                     )
                 }
                 Button(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate("regi")
+                    },
                     shape = RoundedCornerShape(20.dp),
                     colors =
                         ButtonDefaults.buttonColors(

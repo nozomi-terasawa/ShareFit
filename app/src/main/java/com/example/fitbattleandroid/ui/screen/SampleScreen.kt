@@ -6,14 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun MapScreen() {
+fun SampleScreen() {
     Column {
-        Text("hahahha")
+        Text("wawawa")
     }
 }
 
 @Preview
 @Composable
-fun MapScreenPreview() {
-    MapScreen()
+fun SampleScreenPreview() {
+    SampleScreen()
 }
