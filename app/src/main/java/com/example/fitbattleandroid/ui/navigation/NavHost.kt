@@ -5,6 +5,7 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -71,12 +72,18 @@ fun MainNavigation() {
                     BottomNavigationItem(
                         icon = {
                             when (screen.route) {
-                                "map" -> Icon(Icons.Outlined.Home, contentDescription = "Home")
-                                "sample" ->
+                                "map" -> {
+                                    Icon(
+                                        Icons.Outlined.LocationOn,
+                                        contentDescription = "Map"
+                                    )
+                                }
+                                "sample" -> {
                                     Icon(
                                         Icons.Outlined.Settings,
                                         contentDescription = "settings",
                                     )
+                                }
                             }
                         },
                         label = { Text(screen.title) },
