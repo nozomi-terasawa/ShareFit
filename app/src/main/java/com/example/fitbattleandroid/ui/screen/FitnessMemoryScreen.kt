@@ -1,6 +1,5 @@
 package com.example.fitbattleandroid.ui.screen
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -14,11 +13,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -50,13 +49,9 @@ fun FitnessMemory(
     healthConnectClient: HealthConnectClient,
     calorieViewModel: HealthConnectViewModel,
 ) {
-    // var calories by remember { mutableStateOf(("250")) }
-
     val calorieUiState by remember { mutableStateOf(calorieViewModel.calorieUiState) }
     val currentCalorieStr = calorieUiState.value.calorie
     val scope = rememberCoroutineScope()
-
-    Log.d("result", currentCalorieStr + "あ")
 
     // 取得開始時間
     val startLocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT) // 　今日の0時から
@@ -91,10 +86,19 @@ fun FitnessMemory(
         )
         CalorieMeter(
             modifier = Modifier,
-            max = 2000f,
+            max = 2.0f,
             progress = currentCalorieStr.toFloat(),
+            currentCalorieStr = currentCalorieStr,
             // .padding(90.dp)
         )
+
+        LaunchedEffect(Unit) {
+            calorieViewModel.readCalorie(
+                healthConnectClient = healthConnectClient,
+                startTime = Instant.ofEpochMilli(startEpochMilli),
+                endTime = Instant.ofEpochMilli(endEpochMilli),
+            )
+        }
 
         Button(
             onClick = {
@@ -108,8 +112,8 @@ fun FitnessMemory(
             },
         ) {
             Text(
-                text = "最新のカロリーを読み込む",
-                fontSize = 24.sp,
+                text = "最新のカロリーを取得",
+                fontSize = 20.sp,
             )
         }
 
@@ -133,6 +137,7 @@ fun CalorieMeter(
     modifier: Modifier,
     max: Float,
     progress: Float,
+    currentCalorieStr: String
 ) {
     val circleAngle = 360f
     val angle = 240f
@@ -189,7 +194,7 @@ fun CalorieMeter(
                             center = Offset(size.width / 2, size.height / 2),
                         ),
                     startAngle = startAngle,
-                    sweepAngle = angle / max * progress.toFloat(),
+                    sweepAngle = angle / max * progress,
                     useCenter = false,
                     style = Stroke(width = progressWidth.toPx(), cap = StrokeCap.Round),
                     size = Size(size.width, size.height),
@@ -223,7 +228,7 @@ fun CalorieMeter(
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "0/${max.toInt()}",
+                text = "${currentCalorieStr}/${max.toInt()}.0kcal",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
