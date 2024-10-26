@@ -45,7 +45,7 @@ fun FireAnimeModule() {
                 .background(Color.DarkGray),
     ) {
         val image = painterResource(R.drawable.pngtreeburning_fire_5637806)
-        val fire = painterResource(R.drawable.mainfire)
+        val fire = painterResource(R.drawable.pngtreeburning_fire_5637806)
 
         Image(
             painter = fire,
