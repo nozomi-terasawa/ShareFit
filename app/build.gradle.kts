@@ -60,6 +60,8 @@ dependencies {
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation("io.coil-kt.coil3:coil-compose:3.0.0-rc01")
+    implementation("androidx.health.connect:connect-client:1.1.0-alpha07")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
