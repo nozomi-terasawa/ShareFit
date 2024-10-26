@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.ui.common.CommonOutlinedTextField
+import com.example.fitbattleandroid.ui.common.GrayZone
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -41,14 +42,7 @@ fun LoginScreen(navController: NavController) {
                 .fillMaxSize()
                 .background(Color.DarkGray),
     ) {
-        Column(
-            modifier =
-                Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.Black.copy(alpha = 0.4f))
-                    .padding(200.dp),
-        ) {
-        }
+        GrayZone()
 
         Column(
             verticalArrangement = Arrangement.Center,
@@ -96,6 +90,8 @@ fun LoginScreen(navController: NavController) {
         }
     }
 }
+
+
 
 @Preview
 @Composable
