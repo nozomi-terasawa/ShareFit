@@ -1,10 +1,9 @@
-package org.example.project.ui.common
+package com.example.fitbattleandroid.ui.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,12 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommonOutlinedTextField(
     label: String,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
 ) {
     Column {
         OutlinedTextField(
@@ -26,7 +24,7 @@ fun CommonOutlinedTextField(
             label = {
                 Text(
                     text = label,
-                    color = Color.Gray
+                    color = Color.Gray,
                 )
             },
             shape = RoundedCornerShape(5.dp),
@@ -35,9 +33,10 @@ fun CommonOutlinedTextField(
 //                focusedTextColor = Color.Black,
 //                unfocusedTextColor = Color.White,
 //            ),
-            modifier = Modifier
-                .width(300.dp)
-                .padding(bottom = 20.dp)
+            modifier =
+                Modifier
+                    .width(300.dp)
+                    .padding(bottom = 20.dp),
         )
     }
 }
