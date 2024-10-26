@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.internal.composableLambda
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -23,13 +24,14 @@ import com.example.fitbattleandroid.ui.screen.LoginScreen
 import com.websarva.wings.android.myapplication.TopScreen
 
 sealed class Screen(val route: String, val title: String) {
+    object Map : Screen("map","Map")
     object Top : Screen("top", "Top")
-
     object Login : Screen("login", "Login")
 }
 
 val items =
     listOf(
+        Screen.Map,
         Screen.Top,
         Screen.Login,
     )
@@ -49,7 +51,12 @@ fun Greeting() {
                     BottomNavigationItem(
                         icon = {
                             when (screen.route) {
-                                "top" -> Icon(Icons.Outlined.Home, contentDescription = "Home")
+                                "map" -> Icon(Icons.Outlined.Home, contentDescription = "Home")
+                                "top" ->
+                                    Icon(
+                                        Icons.Outlined.Settings,
+                                        contentDescription = "settings",
+                                    )
                                 "login" ->
                                     Icon(
                                         Icons.Outlined.Settings,
@@ -78,6 +85,7 @@ fun Greeting() {
             startDestination = Screen.Top.route,
             Modifier.padding(innerPadding),
         ) {
+            composable(Screen.Map.route){ TopScreen(navController) }
             composable(Screen.Top.route) { TopScreen(navController) }
             composable(Screen.Login.route) { LoginScreen(navController) }
         }
