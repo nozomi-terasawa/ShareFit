@@ -60,7 +60,7 @@ fun MapScreen(
     }
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -91,7 +91,7 @@ fun MapScreen(
         }
 
         ShowMap(
-            modifier = modifier,
+            modifier = Modifier.fillMaxSize(),
             locationData =
                 LocationData(
                     currentLocation.value.latitude,
