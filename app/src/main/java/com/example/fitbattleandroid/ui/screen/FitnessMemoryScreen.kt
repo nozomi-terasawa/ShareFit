@@ -1,5 +1,6 @@
 package com.example.fitbattleandroid.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -10,11 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,17 +27,45 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.health.connect.client.HealthConnectClient
 import com.example.fitbattleandroid.R
 import com.example.fitbattleandroid.ui.common.ShowCurrentTimeAndRemainingTime
+import com.example.fitbattleandroid.viewmodel.HealthConnectViewModel
+import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
 
 @Composable
-fun FitnessMemory(modifier: Modifier) {
-    var calories by remember { mutableStateOf(("250")) }
+fun FitnessMemory(
+    modifier: Modifier,
+    healthConnectClient: HealthConnectClient,
+    calorieViewModel: HealthConnectViewModel,
+) {
+    // var calories by remember { mutableStateOf(("250")) }
+
+    val calorieUiState by remember { mutableStateOf(calorieViewModel.calorieUiState) }
+    val currentCalorieStr = calorieUiState.value.calorie
+    val scope = rememberCoroutineScope()
+
+    Log.d("result", currentCalorieStr + "あ")
+
+    // 取得開始時間
+    val startLocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT) // 　今日の0時から
+    val startEpochMilli = startLocalDateTime.toInstant(ZoneOffset.ofHours(9)).toEpochMilli()
+
+    // 取得終了時間
+    val endLocalDateTime = LocalDateTime.now()
+    val endEpochMilli = endLocalDateTime.toInstant(ZoneOffset.ofHours(9)).toEpochMilli()
+
     Column(
         modifier =
             Modifier
@@ -58,12 +89,29 @@ fun FitnessMemory(modifier: Modifier) {
                 Modifier
                     .padding(top = 100.dp), // ヘッダーの上部に余白を追加
         )
-        CaloriMeter(
+        CalorieMeter(
             modifier = Modifier,
             max = 2000f,
-            progress = calories.toFloat(),
+            progress = currentCalorieStr.toFloat(),
             // .padding(90.dp)
         )
+
+        Button(
+            onClick = {
+                scope.launch {
+                    calorieViewModel.readCalorie(
+                        healthConnectClient = healthConnectClient,
+                        startTime = Instant.ofEpochMilli(startEpochMilli),
+                        endTime = Instant.ofEpochMilli(endEpochMilli),
+                    )
+                }
+            },
+        ) {
+            Text(
+                text = "最新のカロリーを読み込む",
+                fontSize = 24.sp,
+            )
+        }
 
         ShowCurrentTimeAndRemainingTime(modifier)
 
@@ -72,7 +120,7 @@ fun FitnessMemory(modifier: Modifier) {
                 Modifier
                     .padding(top = 10.dp)
                     .align(Alignment.CenterHorizontally),
-            text = "$calories kcal",
+            text = "$currentCalorieStr kcal",
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
@@ -81,7 +129,7 @@ fun FitnessMemory(modifier: Modifier) {
 }
 
 @Composable
-fun CaloriMeter(
+fun CalorieMeter(
     modifier: Modifier,
     max: Float,
     progress: Float,
@@ -141,7 +189,7 @@ fun CaloriMeter(
                             center = Offset(size.width / 2, size.height / 2),
                         ),
                     startAngle = startAngle,
-                    sweepAngle = angle / max * progress,
+                    sweepAngle = angle / max * progress.toFloat(),
                     useCenter = false,
                     style = Stroke(width = progressWidth.toPx(), cap = StrokeCap.Round),
                     size = Size(size.width, size.height),
@@ -188,5 +236,11 @@ fun CaloriMeter(
 @Preview(showSystemUi = true)
 @Composable
 fun FitnessMemoryPreview() {
-    FitnessMemory(modifier = Modifier)
+    val context = LocalContext.current
+
+    FitnessMemory(
+        modifier = Modifier,
+        healthConnectClient = HealthConnectClient.getOrCreate(context),
+        calorieViewModel = HealthConnectViewModel(),
+    )
 }
