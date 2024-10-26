@@ -57,6 +57,8 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.accompanist.permissions)
+    implementation(libs.maps.compose)
+    implementation(libs.play.services.maps)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
