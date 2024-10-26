@@ -1,7 +1,5 @@
 package com.example.fitbattleandroid.ui.screen
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import com.example.fitbattleandroid.R
 import com.example.fitbattleandroid.ui.common.ShowCurrentTimeAndRemainingTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FitnessMemory(modifier: Modifier) {
     var calories by remember { mutableStateOf(("250")) }
@@ -188,7 +185,6 @@ fun CaloriMeter(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true)
 @Composable
 fun FitnessMemoryPreview() {
