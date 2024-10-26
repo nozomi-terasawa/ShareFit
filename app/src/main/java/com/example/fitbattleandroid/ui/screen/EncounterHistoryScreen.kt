@@ -26,8 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
 
 @Composable
 fun EncounterHistoryScreen(
@@ -110,7 +110,6 @@ fun UserIcon(imageUrl: String) {
             ImageRequest
                 .Builder(LocalContext.current)
                 .data(imageUrl)
-                .diskCachePolicy(coil.request.CachePolicy.ENABLED) // キャッシュを有効に設定
                 .build(),
         contentDescription = null,
         modifier =
