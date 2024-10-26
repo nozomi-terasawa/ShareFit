@@ -37,13 +37,14 @@ import com.example.fitbattleandroid.ui.common.ShowCurrentTimeAndRemainingTime
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FitnessMemory(modifier: Modifier) {
-
     var calories by remember { mutableStateOf(("250")) }
     Column(
-        modifier = Modifier
-            .fillMaxSize(), // 画面全体を使用
+        modifier =
+            Modifier
+                .fillMaxSize(),
+        // 画面全体を使用
         verticalArrangement = Arrangement.Center, // 子要素を上から配置
-        horizontalAlignment = Alignment.CenterHorizontally // 子要素を左揃え
+        horizontalAlignment = Alignment.CenterHorizontally, // 子要素を左揃え
     ) {
         Text(
             text = "消費カロリー",
@@ -56,24 +57,24 @@ fun FitnessMemory(modifier: Modifier) {
             fontSize = 28.sp, // 大きなフォントサイズ
             fontWeight = FontWeight.Bold,
             color = Color.Black,
-
-            modifier = Modifier
-                .padding(top = 100.dp) // ヘッダーの上部に余白を追加
-
+            modifier =
+                Modifier
+                    .padding(top = 100.dp), // ヘッダーの上部に余白を追加
         )
         CaloriMeter(
             modifier = Modifier,
             max = 2000f,
-            progress = calories.toFloat()
-            //.padding(90.dp)
+            progress = calories.toFloat(),
+            // .padding(90.dp)
         )
 
         ShowCurrentTimeAndRemainingTime(modifier)
 
         Text(
-            modifier = Modifier
-                .padding(top = 10.dp)
-                .align(Alignment.CenterHorizontally),
+            modifier =
+                Modifier
+                    .padding(top = 10.dp)
+                    .align(Alignment.CenterHorizontally),
             text = "$calories kcal",
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
@@ -82,25 +83,29 @@ fun FitnessMemory(modifier: Modifier) {
     }
 }
 
-
 @Composable
-fun CaloriMeter(modifier: Modifier, max: Float, progress: Float) {
+fun CaloriMeter(
+    modifier: Modifier,
+    max: Float,
+    progress: Float,
+) {
     val circleAngle = 360f
     val angle = 240f
     val progressWidth = 24.dp
     val backgroundWidth = 24.dp
     val startAngle = (circleAngle / 4) + ((circleAngle - angle) / 2)
 
-    Box(modifier = Modifier
-        .padding(top = 100.dp, bottom = 100.dp),
-        contentAlignment = Alignment.Center
+    Box(
+        modifier =
+            Modifier
+                .padding(top = 100.dp, bottom = 100.dp),
+        contentAlignment = Alignment.Center,
     ) {
-
         Canvas(
             modifier =
-            Modifier
-                .size(250.dp)
-                .padding(10.dp),
+                Modifier
+                    .size(250.dp)
+                    .padding(10.dp),
             onDraw = {
                 // 外枠を描画
                 drawArc(
@@ -109,20 +114,21 @@ fun CaloriMeter(modifier: Modifier, max: Float, progress: Float) {
                     sweepAngle = angle,
                     useCenter = false,
                     style =
-                    Stroke(
-                        width = backgroundWidth.toPx(),
-                        cap = StrokeCap.Round,
-                    ),
+                        Stroke(
+                            width = backgroundWidth.toPx(),
+                            cap = StrokeCap.Round,
+                        ),
                     size = Size(size.width, size.height),
-                    //topLeft = Offset(4f, 4f),// 少しずらして影にする
+                    // topLeft = Offset(4f, 4f),// 少しずらして影にする
                 )
                 // 背景を描画
                 drawArc(
-                    brush = Brush.radialGradient(
-                        colors = listOf(Color(192, 192, 192), Color(127, 192, 188)),
-                        center = Offset(size.width / 2, size.height / 2),
-                        radius = size.width / 2
-                    ),
+                    brush =
+                        Brush.radialGradient(
+                            colors = listOf(Color(192, 192, 192), Color(127, 192, 188)),
+                            center = Offset(size.width / 2, size.height / 2),
+                            radius = size.width / 2,
+                        ),
                     startAngle = startAngle,
                     sweepAngle = angle,
                     useCenter = false,
@@ -132,10 +138,11 @@ fun CaloriMeter(modifier: Modifier, max: Float, progress: Float) {
                 // 進捗を描画
                 // 進捗部分にグラデーションをかけて立体的なエフェクト
                 drawArc(
-                    brush = Brush.sweepGradient(
-                        colors = listOf(Color(33, 108, 94), Color(80, 200, 180)),
-                        center = Offset(size.width / 2, size.height / 2),
-                    ),
+                    brush =
+                        Brush.sweepGradient(
+                            colors = listOf(Color(33, 108, 94), Color(80, 200, 180)),
+                            center = Offset(size.width / 2, size.height / 2),
+                        ),
                     startAngle = startAngle,
                     sweepAngle = angle / max * progress,
                     useCenter = false,
@@ -155,15 +162,15 @@ fun CaloriMeter(modifier: Modifier, max: Float, progress: Float) {
 //                        style = Stroke(width = progressWidth.toPx() / 2, cap = StrokeCap.Round),
 //                        size = Size(size.width, size.height),
 //                    )
-
             },
         )
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+//                FireAnimeModule()
             Image(
-                painter = painterResource(id = R.drawable.pngburning_fire_5637806.png),
+                painter = painterResource(id = R.drawable.pngtreeburning_fire_5637806),
                 contentDescription = null,
                 modifier = Modifier.size(80.dp),
             )
@@ -175,15 +182,11 @@ fun CaloriMeter(modifier: Modifier, max: Float, progress: Float) {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black,
-                modifier = Modifier.padding(top = 8.dp) // 画像の下に少しスペースを追加
+                modifier = Modifier.padding(top = 8.dp), // 画像の下に少しスペースを追加
             )
         }
-
     }
-
 }
-
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true)

@@ -3,7 +3,6 @@ package com.example.fitbattleandroid.ui.common
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -42,7 +41,7 @@ fun ShowCurrentTimeAndRemainingTime(modifier: Modifier) {
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // 現在の時刻を表示
 //        Text(
