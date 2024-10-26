@@ -11,12 +11,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun GrayZone(){
+fun GrayZone()  {
     Column(
-        modifier = Modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.Black.copy(alpha = 0.4f))
-            .padding(200.dp)
-    ){
+        modifier =
+            Modifier
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.Black.copy(alpha = 0.4f))
+                .padding(200.dp),
+    ) {
     }
 }
