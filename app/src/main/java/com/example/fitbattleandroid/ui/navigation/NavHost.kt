@@ -3,12 +3,14 @@ package com.example.fitbattleandroid.ui.navigation
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,10 +26,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.fitbattleandroid.ui.screen.EncounterHistoryScreen
+import com.example.fitbattleandroid.ui.screen.EncounterUser
+import com.example.fitbattleandroid.ui.screen.FitnessMemory
 import com.example.fitbattleandroid.ui.screen.LoginScreen
 import com.example.fitbattleandroid.ui.screen.MapScreen
 import com.example.fitbattleandroid.ui.screen.RegistrationScreen
-import com.example.fitbattleandroid.ui.screen.SampleScreen
 import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
 import com.example.fitbattleandroid.viewmodel.LocationViewModel
 import com.websarva.wings.android.myapplication.TopScreen
@@ -36,21 +40,24 @@ sealed class Screen(
     val route: String,
     val title: String,
 ) {
-    object Map : Screen("map", "Map")
+    data object Map : Screen("map", "Map")
 
-    object Sample : Screen("sample", "Sample")
+    data object MyData : Screen("my-data", "MyData")
 
-    object Top : Screen("top", "Top")
+    data object EncounterList : Screen("encounter-list", "EncounterList")
 
-    object Login : Screen("login", "Login")
+    data object Top : Screen("top", "Top")
 
-    object Regi : Screen("regi", "Regi")
+    data object Login : Screen("login", "Login")
+
+    data object Regi : Screen("regi", "Regi")
 }
 
 val items =
     listOf(
         Screen.Map,
-        Screen.Sample,
+        Screen.MyData,
+        Screen.EncounterList,
     )
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -63,6 +70,28 @@ fun App(
     backgroundPermissionGranted: MutableState<Boolean>,
 ) {
     val navController = rememberNavController()
+    // すれ違った人たちの仮のデータ TODO　サーバーサイドから取得
+    val encounterHistoryList =
+        listOf(
+            EncounterUser(
+                userId = "1",
+                userName = "フィットネス 太郎",
+                userIcon = "icon1",
+                calorie = 100,
+            ),
+            EncounterUser(
+                userId = "2",
+                userName = "フィットネス 花子",
+                userIcon = "icon2",
+                calorie = 200,
+            ),
+            EncounterUser(
+                userId = "3",
+                userName = "フィット・ネス次郎",
+                userIcon = "icon3",
+                calorie = 300,
+            ),
+        )
 
     NavHost(
         navController,
@@ -77,6 +106,7 @@ fun App(
                 locationViewModel,
                 geofenceViewModel,
                 backgroundPermissionGranted,
+                encounterHistoryList,
             )
         }
     }
@@ -89,12 +119,14 @@ fun MainNavigation(
     locationViewModel: LocationViewModel,
     geofenceViewModel: GeofencingClientViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
+    encounterHistoryList: List<EncounterUser>,
 ) {
     val navController = rememberNavController()
 
     Scaffold(
         bottomBar = {
             BottomNavigation(
+                modifier = Modifier.navigationBarsPadding(),
                 backgroundColor = Color.Gray,
             ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -109,10 +141,16 @@ fun MainNavigation(
                                         contentDescription = "Map",
                                     )
                                 }
-                                "sample" -> {
+                                "encounter-list" -> {
                                     Icon(
-                                        Icons.Outlined.Settings,
-                                        contentDescription = "settings",
+                                        Icons.Outlined.List,
+                                        contentDescription = "EncounterList",
+                                    )
+                                }
+                                "my-data" -> {
+                                    Icon(
+                                        Icons.Outlined.AccountCircle,
+                                        contentDescription = "MyData",
                                     )
                                 }
                             }
@@ -147,7 +185,15 @@ fun MainNavigation(
                     backgroundPermissionGranted,
                 )
             }
-            composable(Screen.Sample.route) { SampleScreen() }
+            composable(Screen.MyData.route) {
+                FitnessMemory(modifier = Modifier)
+            }
+            composable(Screen.EncounterList.route) {
+                EncounterHistoryScreen(
+                    modifier = Modifier,
+                    encounterHistoryList,
+                )
+            }
         }
     }
 }

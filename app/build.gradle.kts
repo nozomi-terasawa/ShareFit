@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.fitbattleandroid"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -60,6 +60,8 @@ dependencies {
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation("io.coil-kt.coil3:coil-compose:3.0.0-rc01")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,9 +1,7 @@
 package com.websarva.wings.android.myapplication
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
@@ -40,9 +37,8 @@ fun FireAnimeModule() {
     Box(
         contentAlignment = Alignment.Center,
         modifier =
-            Modifier
-                .fillMaxSize()
-                .background(Color.DarkGray),
+        Modifier,
+//                .fillMaxSize()
     ) {
         val image = painterResource(R.drawable.pngtreeburning_fire_5637806)
         val fire = painterResource(R.drawable.pngtreeburning_fire_5637806)
