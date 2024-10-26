@@ -21,24 +21,43 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.ui.screen.LoginScreen
-import com.websarva.wings.android.myapplication.TopScreen
+import com.example.fitbattleandroid.ui.screen.SampleScreen
 import com.example.fitbattleandroid.ui.screen.MapScreen
+import com.websarva.wings.android.myapplication.TopScreen
+import com.example.fitbattleandroid.ui.screen.RegistrationScreen
 
 sealed class Screen(val route: String, val title: String) {
     object Map : Screen("map","Map")
-    object Top : Screen("top", "Top")
+    object Sample : Screen("sample", "Sample")
+    object Top : Screen("top","Top")
     object Login : Screen("login", "Login")
+    object Regi : Screen("regi","Regi")
+
 }
 
 val items =
     listOf(
         Screen.Map,
-        Screen.Top,
-        Screen.Login,
+        Screen.Sample,
     )
 
 @Composable
-fun Greeting() {
+fun Greeting(){
+    val navController = rememberNavController()
+
+    NavHost(
+        navController,
+        startDestination = Screen.Top.route
+    ){
+        composable(Screen.Top.route){ TopScreen(navController) }
+        composable(Screen.Login.route){ LoginScreen(navController) }
+        composable(Screen.Regi.route){ RegistrationScreen(navController)}
+        composable("main"){ MainNavigation() }
+    }
+}
+
+@Composable
+fun MainNavigation() {
     val navController = rememberNavController()
 
     Scaffold(
@@ -53,15 +72,10 @@ fun Greeting() {
                         icon = {
                             when (screen.route) {
                                 "map" -> Icon(Icons.Outlined.Home, contentDescription = "Home")
-                                "top" ->
+                                "sample" ->
                                     Icon(
                                         Icons.Outlined.Settings,
                                         contentDescription = "settings",
-                                    )
-                                "login" ->
-                                    Icon(
-                                        Icons.Outlined.Settings,
-                                        contentDescription = "Settings",
                                     )
                             }
                         },
@@ -87,8 +101,7 @@ fun Greeting() {
             Modifier.padding(innerPadding),
         ) {
             composable(Screen.Map.route) { MapScreen() }
-            composable(Screen.Top.route) { TopScreen(navController) }
-            composable(Screen.Login.route) { LoginScreen(navController) }
+            composable(Screen.Sample.route) { SampleScreen() }
         }
     }
 }

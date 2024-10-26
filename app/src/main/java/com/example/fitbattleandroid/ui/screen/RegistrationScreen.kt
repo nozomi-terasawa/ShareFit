@@ -26,10 +26,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.ui.common.CommonOutlinedTextField
 
 @Composable
-fun RegistrationScreen(modifier: Modifier = Modifier) {
+fun RegistrationScreen(navController: NavController, modifier: Modifier = Modifier) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Box(
@@ -75,7 +77,9 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
                 onValueChange = { password = it},
             )
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    navController.navigate("main")
+                },
                 colors =
                 ButtonDefaults.buttonColors(
                     containerColor = Color.Gray,
@@ -94,5 +98,5 @@ fun RegistrationScreen(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun RegistrationScreenPreview(modifier: Modifier = Modifier) {
-    RegistrationScreen(modifier = modifier)
+    RegistrationScreen(navController = rememberNavController(), modifier = modifier)
 }

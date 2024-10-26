@@ -71,7 +71,7 @@ fun LoginScreen(navController: NavController) {
             )
 
             Button(
-                onClick = { navController.navigate("top_screen") },
+                onClick = { navController.navigate("main") },
                 shape = RoundedCornerShape(20.dp),
                 colors =
                     ButtonDefaults.buttonColors(
