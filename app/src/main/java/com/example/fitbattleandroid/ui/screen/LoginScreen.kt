@@ -93,12 +93,13 @@ fun LoginScreen(navController: NavController) {
                     navController.navigate(Screen.Regi.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                         launchSingleTop = true
-                    }},
+                    }
+                },
                 shape = RoundedCornerShape(20.dp),
                 colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                )
+                    ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                    ),
             ) {
                 Text(
                     text = "新規登録の方はこちら",

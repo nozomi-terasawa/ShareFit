@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,30 +32,33 @@ import com.example.fitbattleandroid.ui.common.CommonOutlinedTextField
 import com.example.fitbattleandroid.ui.navigation.Screen
 
 @Composable
-fun RegistrationScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun RegistrationScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Box(
         contentAlignment = Alignment.Center,
         modifier =
-        Modifier
-            .fillMaxSize()
-            .background(Color.DarkGray),
+            Modifier
+                .fillMaxSize()
+                .background(Color.DarkGray),
     ) {
         Column(
             modifier =
-            Modifier
-                .clip(RoundedCornerShape(16.dp)) // 角を丸くする
-                .background(Color.Black.copy(alpha = 0.4f)) // 丸みを反映した後に再度背景色を設定
-                .padding(200.dp),
+                Modifier
+                    .clip(RoundedCornerShape(16.dp)) // 角を丸くする
+                    .background(Color.Black.copy(alpha = 0.4f)) // 丸みを反映した後に再度背景色を設定
+                    .padding(200.dp),
         ) {
         }
         Column(
             modifier =
-            modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .imePadding(),
+                modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -67,7 +69,7 @@ fun RegistrationScreen(navController: NavController, modifier: Modifier = Modifi
                 color = Color.White,
             )
 
-            CommonOutlinedTextField (
+            CommonOutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = "メールアドレス",
@@ -75,20 +77,20 @@ fun RegistrationScreen(navController: NavController, modifier: Modifier = Modifi
 
             CommonOutlinedTextField(
                 value = password,
-                label = "password" ,
-                onValueChange = { password = it},
+                label = "password",
+                onValueChange = { password = it },
             )
             Button(
                 onClick = {
                     navController.navigate("main")
                 },
                 colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = Color.Gray,
-                ),
+                    ButtonDefaults.buttonColors(
+                        containerColor = Color.Gray,
+                    ),
                 modifier =
-                modifier
-                    .width(200.dp),
+                    modifier
+                        .width(200.dp),
                 // .border(BorderStroke(1.dp, Color.Blue),
             ) {
                 Text("新規登録", color = Color.White)
@@ -98,12 +100,13 @@ fun RegistrationScreen(navController: NavController, modifier: Modifier = Modifi
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Regi.route) { inclusive = true }
                         launchSingleTop = true
-                    }},
+                    }
+                },
                 shape = RoundedCornerShape(20.dp),
                 colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                )
+                    ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                    ),
             ) {
                 Text(
                     text = "登録済みの方はこちら",

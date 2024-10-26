@@ -24,7 +24,7 @@ import com.example.fitbattleandroid.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun AnimemotionModule()  {
+fun AnimemotionModule() {
     var alpha by remember { mutableStateOf(1f) }
     var offsetX by remember { mutableStateOf(300f) }
     var fadeOut by remember { mutableStateOf(true) }
@@ -50,15 +50,15 @@ fun AnimemotionModule()  {
                     fadeOut = true
                 }
             }
-            if(smokeOut){
+            if (smokeOut) {
                 smokeAlpha -= 0.1f
-                if(smokeAlpha <= 0f){
+                if (smokeAlpha <= 0f) {
                     smokeAlpha = 0f
                     smokeOut = false
                 }
-            }else{
+            } else {
                 smokeAlpha += 0.1f
-                if(smokeAlpha >= 1f){
+                if (smokeAlpha >= 1f) {
                     smokeAlpha = 1f
                     smokeOut = true
                 }
@@ -69,54 +69,53 @@ fun AnimemotionModule()  {
     Box(
         contentAlignment = Alignment.Center,
         modifier =
-        Modifier
-            .fillMaxSize()
-            .background(Color.DarkGray),
+            Modifier
+                .fillMaxSize()
+                .background(Color.DarkGray),
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier =
-            Modifier
-                .fillMaxSize(),
+                Modifier
+                    .fillMaxSize(),
         ) {
             val image = painterResource(R.drawable.pngtreerunning_character_silhouette_png_free_4627520)
             val smoke = painterResource(R.drawable.pngtreesmoke_white_dream_fog_6860988)
-
 
             Box {
                 Image(
                     painter = image,
                     contentDescription = null,
-                    modifier = Modifier
-                        .graphicsLayer {
-                            this.alpha = alpha
-                            translationX = offsetX
-                            translationY = 0f
-                        }
-                        .size(100.dp)
+                    modifier =
+                        Modifier
+                            .graphicsLayer {
+                                this.alpha = alpha
+                                translationX = offsetX
+                                translationY = 0f
+                            }.size(100.dp),
                 )
                 Image(
                     painter = smoke,
                     contentDescription = null,
-                    modifier = Modifier
-                        .graphicsLayer {
-                            this.alpha = smokeAlpha
-                            translationX = offsetX+155f
-                            translationY = 40f
-                        }
-                        .size(100.dp)
+                    modifier =
+                        Modifier
+                            .graphicsLayer {
+                                this.alpha = smokeAlpha
+                                translationX = offsetX + 155f
+                                translationY = 40f
+                            }.size(100.dp),
                 )
                 Image(
                     painter = smoke,
                     contentDescription = null,
-                    modifier = Modifier
-                        .graphicsLayer {
-                            this.alpha = 1f-smokeAlpha
-                            translationX = offsetX+85f
-                            translationY = 40f
-                        }
-                        .size(100.dp)
+                    modifier =
+                        Modifier
+                            .graphicsLayer {
+                                this.alpha = 1f - smokeAlpha
+                                translationX = offsetX + 85f
+                                translationY = 40f
+                            }.size(100.dp),
                 )
             }
         }
@@ -125,6 +124,6 @@ fun AnimemotionModule()  {
 
 @Preview
 @Composable
-fun AnimeModulePreview()  {
+fun AnimeModulePreview() {
     AnimemotionModule()
 }
