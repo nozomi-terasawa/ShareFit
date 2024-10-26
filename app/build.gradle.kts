@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("plugin.serialization") version "2.0.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
@@ -59,6 +60,12 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.ktor.core)
+    implementation(libs.ktor.cio)
+    implementation(libs.ktor.content.negotiation)
+    implementation(libs.ktor.serialization)
+    implementation(libs.ktor.client.websockets)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
