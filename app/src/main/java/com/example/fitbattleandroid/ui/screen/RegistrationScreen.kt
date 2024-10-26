@@ -26,9 +26,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.ui.common.CommonOutlinedTextField
+import com.example.fitbattleandroid.ui.navigation.Screen
 
 @Composable
 fun RegistrationScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -90,6 +92,24 @@ fun RegistrationScreen(navController: NavController, modifier: Modifier = Modifi
                 // .border(BorderStroke(1.dp, Color.Blue),
             ) {
                 Text("新規登録", color = Color.White)
+            }
+            Button(
+                onClick = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Regi.route) { inclusive = true }
+                        launchSingleTop = true
+                    }},
+                shape = RoundedCornerShape(20.dp),
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                )
+            ) {
+                Text(
+                    text = "登録済みの方はこちら",
+                    color = Color.White,
+                    fontSize = 10.sp,
+                )
             }
         }
     }

@@ -24,10 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.ui.common.CommonOutlinedTextField
 import com.example.fitbattleandroid.ui.common.GrayZone
+import com.example.fitbattleandroid.ui.navigation.Screen
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -86,20 +88,26 @@ fun LoginScreen(navController: NavController) {
                     color = Color.White,
                 )
             }
+            Button(
+                onClick = {
+                    navController.navigate(Screen.Regi.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                        launchSingleTop = true
+                    }},
+                shape = RoundedCornerShape(20.dp),
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                )
+            ) {
+                Text(
+                    text = "新規登録の方はこちら",
+                    color = Color.White,
+                    fontSize = 10.sp,
+                )
+            }
         }
     }
-}
-
-@Preview
-@Composable
-fun CommonOutlineTextFieldPreview() {
-    var email by remember { mutableStateOf("") }
-
-    CommonOutlinedTextField(
-        label = "メールアドレス",
-        value = email,
-        onValueChange = { email = it },
-    )
 }
 
 @Composable
