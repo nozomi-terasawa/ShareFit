@@ -1,11 +1,8 @@
 package com.websarva.wings.android.myapplication
 
-import android.service.notification.NotificationListenerService.RankingMap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -30,12 +27,11 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 @Composable
-fun FireAnimeModule()  {
-
+fun FireAnimeModule() {
     val fireParticles = remember { mutableStateListOf<FireParticleData>() }
 
     LaunchedEffect(Unit) {
-        while(true){
+        while (true) {
             fireParticles.add(FireParticleData())
             delay(100)
         }
@@ -44,23 +40,21 @@ fun FireAnimeModule()  {
     Box(
         contentAlignment = Alignment.Center,
         modifier =
-        Modifier
-            .fillMaxSize()
-            .background(Color.DarkGray),
+            Modifier
+                .fillMaxSize()
+                .background(Color.DarkGray),
     ) {
-
         val image = painterResource(R.drawable.pngtreeburning_fire_5637806)
         val fire = painterResource(R.drawable.mainfire)
-
 
         Image(
             painter = fire,
             contentDescription = null,
-            modifier = Modifier.size(100.dp)
+            modifier = Modifier.size(100.dp),
         )
 
         fireParticles.forEach { particle ->
-            FireParticle(image = image,data = particle){
+            FireParticle(image = image, data = particle) {
                 fireParticles.remove(particle)
             }
         }
@@ -68,16 +62,19 @@ fun FireAnimeModule()  {
 }
 
 @Composable
-fun FireParticle(image: androidx.compose.ui.graphics.painter.Painter,data: FireParticleData,onDisapper:() -> Unit) {
-
+fun FireParticle(
+    image: androidx.compose.ui.graphics.painter.Painter,
+    data: FireParticleData,
+    onDisapper: () -> Unit,
+) {
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
     var alpha by remember { mutableStateOf(1f) }
 
     LaunchedEffect(Unit) {
         while (alpha > 0f) {
-            offsetX += (cos(data.angle)*data.speed).toFloat()
-            offsetY += (sin(data.angle)*data.speed).toFloat()+1
+            offsetX += (cos(data.angle) * data.speed).toFloat()
+            offsetY += (sin(data.angle) * data.speed).toFloat() + 1
             alpha -= 0.02f
 
             delay(50)
@@ -88,25 +85,26 @@ fun FireParticle(image: androidx.compose.ui.graphics.painter.Painter,data: FireP
     Image(
         painter = image,
         contentDescription = null,
-        modifier = Modifier
-            .size(5.dp)
-            .graphicsLayer(
-                translationX = offsetX,
-                translationY = offsetY-50f,
-                scaleX = 1f,
-                scaleY = 1f,
-                alpha = alpha
-            )
+        modifier =
+            Modifier
+                .size(5.dp)
+                .graphicsLayer(
+                    translationX = offsetX,
+                    translationY = offsetY - 50f,
+                    scaleX = 1f,
+                    scaleY = 1f,
+                    alpha = alpha,
+                ),
     )
 }
 
 data class FireParticleData(
-    val angle:Double = Random.nextDouble(0.0,2*Math.PI),
-    val speed:Float = Random.nextFloat()*5+2
+    val angle: Double = Random.nextDouble(0.0, 2 * Math.PI),
+    val speed: Float = Random.nextFloat() * 5 + 2,
 )
 
 @Preview
 @Composable
-fun FireAnimeModulePreview()  {
+fun FireAnimeModulePreview() {
     FireAnimeModule()
 }
