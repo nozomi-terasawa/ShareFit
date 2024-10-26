@@ -1,4 +1,4 @@
-package com.websarva.wings.android.myapplication
+package com.example.fitbattleandroid.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
