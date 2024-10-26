@@ -10,11 +10,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.example.fitbattleandroid.ui.common.Dialog
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -28,11 +28,11 @@ import kotlinx.coroutines.CoroutineScope
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun LocationPermissionRequest(
-    modifier: Modifier,
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
     fetchLocation: (scope: CoroutineScope) -> Unit,
     updatePriority: (priority: Int) -> Unit,
     onPermissionGranted: (Boolean) -> Unit,
+    backgroundPermissionGranted: MutableState<Boolean>,
 ) {
     val foregroundPermissions =
         listOf(
@@ -68,9 +68,10 @@ fun LocationPermissionRequest(
         foregroundPermissionStates.allPermissionsGranted -> {
             LaunchedEffect(Unit) {
                 fetchLocation(scope)
+                onPermissionGranted(true)
+                openDialog.value = true
             }
-            onPermissionGranted(true)
-            if (openDialog.value) {
+            if (openDialog.value && !backgroundPermissionGranted.value) {
                 Dialog(
                     onDismissRequest = {
                         openDialog.value = false
@@ -84,7 +85,7 @@ fun LocationPermissionRequest(
                         context.startActivity(intent)
                     },
                     dialogTitle = "位置情報を常に許可",
-                    dialogText = "アプリを閉じている時に他のユーザーとマッチするために位置情報を常に許可することが必要です。",
+                    dialogText = "他のユーザーとマッチするために位置情報を常に許可してください。",
                     icon = Icons.Default.Info,
                 )
             }
