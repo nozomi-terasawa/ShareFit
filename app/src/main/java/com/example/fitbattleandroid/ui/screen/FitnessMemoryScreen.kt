@@ -2,14 +2,18 @@ package com.example.fitbattleandroid.ui.screen
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,52 +35,80 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fitbattleandroid.R
 import com.example.fitbattleandroid.ui.common.ShowCurrentTimeAndRemainingTime
+import com.example.fitbattleandroid.ui.theme.onPrimaryDark
+import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
+import com.example.fitbattleandroid.ui.theme.primaryContainerLight
 
 @Composable
 fun FitnessMemory(modifier: Modifier) {
     var calories by remember { mutableStateOf(("250")) }
     Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier =
+        Modifier
+            .fillMaxSize()
+            .imePadding()
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(primaryContainerDarkMediumContrast)
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Share Fit",
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = onPrimaryDark,
+                )
+            )
+        }
+
+        Column(
+            modifier =
             Modifier
                 .fillMaxSize(),
-        // 画面全体を使用
-        verticalArrangement = Arrangement.Center, // 子要素を上から配置
-        horizontalAlignment = Alignment.CenterHorizontally, // 子要素を左揃え
-    ) {
-        Text(
-            text = "消費カロリー",
-            fontSize = 22.sp, // 大きなフォントサイズ
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-        )
-        Text(
-            text = "today", // ヘッダーのテキスト
-            fontSize = 28.sp, // 大きなフォントサイズ
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            modifier =
+            // 画面全体を使用
+            verticalArrangement = Arrangement.Center, // 子要素を上から配置
+            horizontalAlignment = Alignment.CenterHorizontally, // 子要素を左揃え
+        ) {
+            Text(
+                text = "消費カロリー",
+                fontSize = 22.sp, // 大きなフォントサイズ
+                fontWeight = FontWeight.Bold,
+                color = onPrimaryDark,
+            )
+            Text(
+                text = "today", // ヘッダーのテキスト
+                fontSize = 28.sp, // 大きなフォントサイズ
+                fontWeight = FontWeight.Bold,
+                color = onPrimaryDark,
+                modifier =
                 Modifier
                     .padding(top = 100.dp), // ヘッダーの上部に余白を追加
-        )
-        CaloriMeter(
-            modifier = Modifier,
-            max = 2000f,
-            progress = calories.toFloat(),
-            // .padding(90.dp)
-        )
+            )
+            CaloriMeter(
+                modifier = Modifier,
+                max = 2000f,
+                progress = calories.toFloat(),
+                // .padding(90.dp)
+            )
 
-        ShowCurrentTimeAndRemainingTime(modifier)
+            ShowCurrentTimeAndRemainingTime(modifier)
 
-        Text(
-            modifier =
+            Text(
+                modifier =
                 Modifier
                     .padding(top = 10.dp)
                     .align(Alignment.CenterHorizontally),
-            text = "$calories kcal",
-            fontSize = 40.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-        )
+                text = "$calories kcal",
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold,
+                color = onPrimaryDark,
+            )
+        }
     }
 }
 
@@ -106,7 +138,7 @@ fun CaloriMeter(
             onDraw = {
                 // 外枠を描画
                 drawArc(
-                    color = Color.Black,
+                    color = onPrimaryDark,
                     startAngle = startAngle,
                     sweepAngle = angle,
                     useCenter = false,
@@ -178,7 +210,7 @@ fun CaloriMeter(
                 text = "0/${max.toInt()}",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = onPrimaryDark,
                 modifier = Modifier.padding(top = 8.dp), // 画像の下に少しスペースを追加
             )
         }

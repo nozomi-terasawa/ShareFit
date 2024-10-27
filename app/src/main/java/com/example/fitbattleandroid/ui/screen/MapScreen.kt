@@ -5,10 +5,17 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,9 +27,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fitbattleandroid.ui.permissioncheck.LocationPermissionRequest
+import com.example.fitbattleandroid.ui.theme.onPrimaryDark
+import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
+import com.example.fitbattleandroid.ui.theme.primaryContainerLight
 import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
 import com.example.fitbattleandroid.viewmodel.LocationData
 import com.example.fitbattleandroid.viewmodel.LocationViewModel
@@ -60,47 +72,82 @@ fun MapScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
+        modifier =
+        Modifier
+            .fillMaxSize()
+            .imePadding()
     ) {
-        LocationPermissionRequest(
-            requestPermissionLauncher = requestPermissionLauncher,
-            fetchLocation = {
-                scope.launch(Dispatchers.IO) {
-                    locationViewModel.fetchLocation()
-                }
-            },
-            updatePriority = { priority ->
-                locationViewModel.updatePriority(priority)
-                locationViewModel.createLocationRequest()
-            },
-            onPermissionGranted = { boolean ->
-                permissionGranted.value = boolean
-            },
-            backgroundPermissionGranted = backgroundPermissionGranted,
-        )
-
-        Button(onClick = {
-            if (backgroundPermissionGranted.value) {
-                geofenceViewModel.addGeofence()
-                geofenceViewModel.registerGeofence()
-            }
-        }) {
-            Text(text = "ジオフェンスを追加")
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Share Fit",
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = onPrimaryDark,
+                )
+            )
         }
 
-        ShowMap(
-            modifier = Modifier.fillMaxSize(),
-            locationData =
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .background(primaryContainerLight)
+                .fillMaxSize()
+        ) {
+            LocationPermissionRequest(
+                requestPermissionLauncher = requestPermissionLauncher,
+                fetchLocation = {
+                    scope.launch(Dispatchers.IO) {
+                        locationViewModel.fetchLocation()
+                    }
+                },
+                updatePriority = { priority ->
+                    locationViewModel.updatePriority(priority)
+                    locationViewModel.createLocationRequest()
+                },
+                onPermissionGranted = { boolean ->
+                    permissionGranted.value = boolean
+                },
+                backgroundPermissionGranted = backgroundPermissionGranted,
+            )
+
+            Button(
+                onClick = {
+                    if (backgroundPermissionGranted.value) {
+                        geofenceViewModel.addGeofence()
+                        geofenceViewModel.registerGeofence()
+                    }
+                },
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = primaryContainerDarkMediumContrast,
+                ),
+            ) {
+                Text(
+                    text = "ジオフェンスを追加",
+                    color = onPrimaryDark,
+                )
+            }
+
+            ShowMap(
+                modifier = Modifier.fillMaxSize(),
+                locationData =
                 LocationData(
                     currentLocation.value.latitude,
                     currentLocation.value.longitude,
                     0,
                 ),
-            geofenceList = geofenceList.toList(),
-            permissionState = permissionGranted.value,
-        )
+                geofenceList = geofenceList.toList(),
+                permissionState = permissionGranted.value,
+            )
+        }
     }
 }
 

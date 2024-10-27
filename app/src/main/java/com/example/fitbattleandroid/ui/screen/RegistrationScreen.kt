@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -30,6 +31,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.ui.common.CommonOutlinedTextField
 import com.example.fitbattleandroid.ui.navigation.Screen
+import com.example.fitbattleandroid.ui.theme.onPrimaryDark
+import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
+import com.example.fitbattleandroid.ui.theme.primaryContainerLight
 
 @Composable
 fun RegistrationScreen(
@@ -43,76 +47,94 @@ fun RegistrationScreen(
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(Color.DarkGray),
+                .background(primaryContainerLight)
     ) {
         Column(
-            modifier =
-                Modifier
-                    .clip(RoundedCornerShape(16.dp)) // 角を丸くする
-                    .background(Color.Black.copy(alpha = 0.4f)) // 丸みを反映した後に再度背景色を設定
-                    .padding(200.dp),
-        ) {
-        }
-        Column(
-            modifier =
-                modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .imePadding(),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                "新規登録",
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                modifier = modifier.padding(bottom = 60.dp),
-                color = Color.White,
-            )
+            modifier =
+            Modifier
+                .fillMaxSize()
+                .imePadding()
+        ){
 
-            CommonOutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = "メールアドレス",
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(primaryContainerDarkMediumContrast)
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Share Fit",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = onPrimaryDark,
+                    )
+                )
+            }
 
-            CommonOutlinedTextField(
-                value = password,
-                label = "password",
-                onValueChange = { password = it },
-            )
-            Button(
-                onClick = {
-                    navController.navigate("main")
-                },
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = Color.Gray,
-                    ),
+            Column(
                 modifier =
                     modifier
-                        .width(200.dp),
-                // .border(BorderStroke(1.dp, Color.Blue),
+                        .fillMaxSize()
+                        .padding(16.dp)
+                        .imePadding(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
             ) {
-                Text("新規登録", color = Color.White)
-            }
-            Button(
-                onClick = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Regi.route) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                },
-                shape = RoundedCornerShape(20.dp),
-                colors =
+                Text(
+                    "新規登録",
+                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                    modifier = modifier.padding(bottom = 60.dp),
+                    color = onPrimaryDark,
+                )
+
+                CommonOutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = "メールアドレス",
+                )
+
+                CommonOutlinedTextField(
+                    value = password,
+                    label = "パスワード",
+                    onValueChange = { password = it },
+                )
+                Button(
+                    onClick = {
+                        navController.navigate("main")
+                    },
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = primaryContainerDarkMediumContrast,
+                        ),
+                    modifier =
+                    modifier
+                        .width(200.dp),
+                    // .border(BorderStroke(1.dp, Color.Blue),
+                ) {
+                    Text("新規登録", color = Color.White)
+                }
+                Button(
+                    onClick = {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.Regi.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    colors =
                     ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
                     ),
-            ) {
-                Text(
-                    text = "登録済みの方はこちら",
-                    color = Color.White,
-                    fontSize = 10.sp,
-                )
+                ) {
+                    Text(
+                        text = "登録済みの方はこちら",
+                        color = onPrimaryDark,
+                        fontSize = 10.sp,
+                    )
+                }
             }
         }
     }

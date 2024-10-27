@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -56,7 +57,7 @@ fun ShowCurrentTimeAndRemainingTime(modifier: Modifier) {
             text = String.format("リセットまで %02d:%02d:%02d", hours, minutes, seconds),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black,
+            color = onPrimaryDark,
         )
     }
 }
