@@ -19,6 +19,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.health.connect.client.HealthConnectClient
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -35,6 +36,7 @@ import com.example.fitbattleandroid.ui.screen.RegistrationScreen
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
 import com.example.fitbattleandroid.ui.theme.primaryLight
 import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
+import com.example.fitbattleandroid.viewmodel.HealthConnectViewModel
 import com.example.fitbattleandroid.viewmodel.LocationViewModel
 import com.websarva.wings.android.myapplication.TopScreen
 
@@ -70,6 +72,7 @@ fun App(
     locationViewModel: LocationViewModel,
     geofenceViewModel: GeofencingClientViewModel = viewModel(),
     backgroundPermissionGranted: MutableState<Boolean>,
+    healthConnectClient: HealthConnectClient,
 ) {
     val navController = rememberNavController()
     // すれ違った人たちの仮のデータ TODO　サーバーサイドから取得
@@ -109,6 +112,7 @@ fun App(
                 geofenceViewModel,
                 backgroundPermissionGranted,
                 encounterHistoryList,
+                healthConnectClient,
             )
         }
     }
@@ -122,6 +126,7 @@ fun MainNavigation(
     geofenceViewModel: GeofencingClientViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
     encounterHistoryList: List<EncounterUser>,
+    healthConnectClient: HealthConnectClient,
 ) {
     val navController = rememberNavController()
 
@@ -188,7 +193,11 @@ fun MainNavigation(
                 )
             }
             composable(Screen.MyData.route) {
-                FitnessMemory(modifier = Modifier)
+                FitnessMemory(
+                    modifier = Modifier,
+                    healthConnectClient,
+                    calorieViewModel = HealthConnectViewModel(),
+                )
             }
             composable(Screen.EncounterList.route) {
                 EncounterHistoryScreen(
