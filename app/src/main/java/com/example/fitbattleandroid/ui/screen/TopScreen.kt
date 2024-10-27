@@ -1,5 +1,6 @@
 package com.websarva.wings.android.myapplication
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,21 +8,25 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.fitbattleandroid.R
 
 @Composable
 fun TopScreen(navController: NavController) {
@@ -30,7 +35,7 @@ fun TopScreen(navController: NavController) {
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(Color.DarkGray),
+                .background(MaterialTheme.colorScheme.background),
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -41,12 +46,13 @@ fun TopScreen(navController: NavController) {
                     .imePadding()
                     .padding(16.dp),
         ) {
-            Text(
-                text = "JPHACKへようこそ！",
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(16.dp),
+            val image = painterResource(R.drawable.sharefit_jpeg)
+            Image(
+                painter = image,
+                contentDescription = null,
+                modifier = Modifier.size(500.dp),
             )
+
             Column {
                 Button(
                     onClick = {
@@ -72,10 +78,10 @@ fun TopScreen(navController: NavController) {
                         navController.navigate("regi")
                     },
                     shape = RoundedCornerShape(20.dp),
-                    colors =
-                        ButtonDefaults.buttonColors(
-                            containerColor = Color.Gray,
-                        ),
+//                    colors =
+//                        ButtonDefaults.buttonColors(
+//                            containerColor = Color.Gray,
+//                        ),
                     modifier =
                         Modifier
                             .width(200.dp),

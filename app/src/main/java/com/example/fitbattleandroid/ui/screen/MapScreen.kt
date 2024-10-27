@@ -3,12 +3,14 @@ package com.example.fitbattleandroid.ui.screen
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,8 +24,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.fitbattleandroid.model.EntryGeoFenceReq
 import com.example.fitbattleandroid.ui.permissioncheck.LocationPermissionRequest
 import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
+import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
 import com.example.fitbattleandroid.viewmodel.LocationData
 import com.example.fitbattleandroid.viewmodel.LocationViewModel
 import com.google.android.gms.location.Geofence
@@ -33,6 +37,7 @@ import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.rememberCameraPositionState
+import io.ktor.client.call.body
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -44,6 +49,7 @@ fun MapScreen(
     locationViewModel: LocationViewModel,
     geofenceViewModel: GeofencingClientViewModel = viewModel(),
     backgroundPermissionGranted: MutableState<Boolean>,
+    healthDataApiViewModel: HealthDataApiViewModel = viewModel()
 ) {
     val locationData = locationViewModel.location.collectAsState().value
     val geofenceList = geofenceViewModel.geofenceList
@@ -60,7 +66,7 @@ fun MapScreen(
     }
 
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -85,13 +91,22 @@ fun MapScreen(
             if (backgroundPermissionGranted.value) {
                 geofenceViewModel.addGeofence()
                 geofenceViewModel.registerGeofence()
+                scope.launch(Dispatchers.IO) {
+                    val response = healthDataApiViewModel.sendGeoFenceEntryRequest(
+                        EntryGeoFenceReq(
+                            userId = 12,
+                            geoFenceId = 2,
+                            entryTime = "2021-10-01T10:00:00.391Z",
+                        )
+                    )
+                }
             }
         }) {
             Text(text = "ジオフェンスを追加")
         }
 
         ShowMap(
-            modifier = modifier,
+            modifier = Modifier.fillMaxSize(),
             locationData =
                 LocationData(
                     currentLocation.value.latitude,

@@ -18,6 +18,7 @@ playServicesLocation = "21.3.0"
 secretsGradlePlugin = "2.0.1"
 navigationCommonKtx = "2.8.3"
 ktor_version = "3.0.0"
+uiTextGoogleFonts = "1.7.4"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -49,6 +50,7 @@ ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor_version" }
 ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor_version" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor_version" }
 ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor_version" }
+androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 
 
 [plugins]
