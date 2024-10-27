@@ -55,9 +55,28 @@ fun Header(
 }
 
 @Composable
+fun Body(
+    content: @Composable () -> Unit
+){
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier =
+        Modifier
+            .fillMaxSize()
+    ) {
+        content()
+    }
+}
+
+@Composable
 @Preview
 fun HeaderPreview(){
+
     Header(){
-        Text("Hello")
+        Body {
+            Text("Hello")
+        }
     }
+
 }
