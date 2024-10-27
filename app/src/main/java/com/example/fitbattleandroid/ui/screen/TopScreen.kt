@@ -66,7 +66,7 @@ fun TopScreen(navController: NavController) {
                 )
             }
 
-            val image = painterResource(R.drawable.dall_e_2024_10_27_12_22_32___a_logo_design_for__sharefit__with_all_letters_intact_and_no_modifications_to_the_text__incorporate_a_subtle_fitness_or_calorie_related_element__such_a__1_)
+            val image = painterResource(R.drawable.dall_e_2024_10_27_12_33_00___a_professional_and_corporate_style_logo_design_for__sharefit___incorporating_the_text_with_a_subtle_fitness_or_wellness_related_element_such_as_a_smal__1_)
             Image(
                 painter = image,
                 contentDescription = null,
