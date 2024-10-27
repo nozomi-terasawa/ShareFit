@@ -1,5 +1,6 @@
 package com.example.fitbattleandroid.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,18 +27,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
+import com.example.fitbattleandroid.data.MemberInfo
+import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
 
 @Composable
 fun EncounterHistoryScreen(
     modifier: Modifier,
-    encounterHistoryList: List<EncounterUser>,
+    dataAPIViewModel: HealthDataApiViewModel
+    // encounterHistoryList: List<EncounterUser>,
 ) {
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Log.d("result", dataAPIViewModel.encounterMembers.toString() + "ddd")
+        val encounterHistoryList = dataAPIViewModel.encounterMembers
+
         Text(
             text = "今日であったユーザー",
             fontSize = 24.sp,
@@ -45,14 +54,16 @@ fun EncounterHistoryScreen(
             modifier = Modifier.padding(20.dp),
         )
 
-        LazyColumn(modifier) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
             items(
                 items = encounterHistoryList,
-                key = { encounterHistoryList -> encounterHistoryList.userId },
-            ) {
+                key = { encounterUser -> encounterUser.id },
+            ) { encounterUser ->
                 EncounterHistoryItem(
                     modifier = Modifier.fillMaxWidth(),
-                    encounterUser = it,
+                    encounterUser = encounterUser,
                 )
             }
         }
@@ -62,8 +73,10 @@ fun EncounterHistoryScreen(
 @Composable
 fun EncounterHistoryItem(
     modifier: Modifier,
-    encounterUser: EncounterUser,
+    encounterUser: MemberInfo,
 ) {
+    Log.d("result", encounterUser.toString())
+
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier =
@@ -90,13 +103,13 @@ fun EncounterHistoryItem(
 
             Column {
                 Text(
-                    text = encounterUser.userName,
+                    text = encounterUser.name,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(4.dp),
                 )
                 Text(
-                    text = "昨日の総消費カロリー：${encounterUser.calorie}cal",
+                    text = "昨日の総消費カロリー：1,700kcal",
                 )
             }
         }
@@ -125,15 +138,15 @@ fun EncounterHistoryItemPreview() {
     EncounterHistoryItem(
         modifier = Modifier.fillMaxSize(),
         encounterUser =
-            EncounterUser(
-                userId = "1",
-                userName = "フィットネス太郎",
-                userIcon = "icon1",
-                calorie = 100,
+            MemberInfo(
+                id = 1,
+                name = "フィットネス 太郎",
+                iconUrl = "icon1",
             ),
     )
 }
 
+/*
 @Preview
 @Composable
 fun EncounterHistoryScreenPreview() {
@@ -169,3 +182,5 @@ data class EncounterUser(
     val userIcon: String,
     val calorie: Int,
 )
+
+ */

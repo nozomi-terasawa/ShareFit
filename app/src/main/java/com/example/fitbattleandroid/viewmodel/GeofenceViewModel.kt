@@ -33,8 +33,8 @@ class GeofencingClientViewModel(
         mutableListOf(
             GeofenceData(
                 "KIT",
-                36.53017077369422,
-                136.62784179442636,
+                36.53252814659672,
+                136.62909188593616,
                 100f,
             ),
         )
