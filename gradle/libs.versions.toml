@@ -17,6 +17,7 @@ navigationCompose = "2.8.3"
 playServicesLocation = "21.3.0"
 secretsGradlePlugin = "2.0.1"
 navigationCommonKtx = "2.8.3"
+ktor_version = "3.0.0"
 uiTextGoogleFonts = "1.7.4"
 
 [libraries]
@@ -44,6 +45,11 @@ play-services-maps = { module = "com.google.android.gms:play-services-maps", ver
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 androidx-navigation-common-ktx = { group = "androidx.navigation", name = "navigation-common-ktx", version.ref = "navigationCommonKtx" }
+ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor_version" }
+ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor_version" }
+ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor_version" }
+ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor_version" }
+ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor_version" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 
 
