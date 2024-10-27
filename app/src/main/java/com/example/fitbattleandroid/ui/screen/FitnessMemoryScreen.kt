@@ -50,6 +50,7 @@ import java.time.ZoneOffset
 import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
 import com.example.fitbattleandroid.ui.theme.primaryContainerLight
+import com.websarva.wings.android.myapplication.FireAnimeModule
 
 @Composable
 fun FitnessMemory(
@@ -271,12 +272,12 @@ fun CalorieMeter(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-//                FireAnimeModule()
-            Image(
-                painter = painterResource(id = R.drawable.pngtreeburning_fire_5637806),
-                contentDescription = null,
-                modifier = Modifier.size(150.dp),
-            )
+            FireAnimeModule()
+//            Image(
+//                painter = painterResource(id = R.drawable.pngtreeburning_fire_5637806),
+//                contentDescription = null,
+//                modifier = Modifier.size(150.dp),
+//            )
 
             Spacer(modifier = Modifier.height(20.dp))
 
