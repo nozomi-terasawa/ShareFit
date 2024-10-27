@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,13 +19,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.R
+import com.example.fitbattleandroid.ui.theme.onPrimaryDark
+import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
+import com.example.fitbattleandroid.ui.theme.primaryContainerLight
 
 @Composable
 fun TopScreen(navController: NavController) {
@@ -33,18 +37,35 @@ fun TopScreen(navController: NavController) {
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+                .background(primaryContainerLight),
     ) {
         Column(
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .imePadding()
-                    .padding(16.dp),
+                    .imePadding(),
         ) {
-            val image = painterResource(R.drawable.sharefit_jpeg)
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(primaryContainerDarkMediumContrast)
+                        .padding(16.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = "Share Fit",
+                    style =
+                        MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = onPrimaryDark,
+                        ),
+                )
+            }
+
+            val image = painterResource(R.drawable.title)
             Image(
                 painter = image,
                 contentDescription = null,
@@ -59,7 +80,7 @@ fun TopScreen(navController: NavController) {
                     shape = RoundedCornerShape(20.dp),
                     colors =
                         ButtonDefaults.buttonColors(
-                            containerColor = Color.Gray,
+                            containerColor = primaryContainerDarkMediumContrast,
                         ),
                     modifier =
                         Modifier
@@ -68,7 +89,7 @@ fun TopScreen(navController: NavController) {
                 ) {
                     Text(
                         text = "ログイン",
-                        color = Color.White,
+                        color = onPrimaryDark,
                     )
                 }
                 Button(
@@ -76,17 +97,17 @@ fun TopScreen(navController: NavController) {
                         navController.navigate("regi")
                     },
                     shape = RoundedCornerShape(20.dp),
-//                    colors =
-//                        ButtonDefaults.buttonColors(
-//                            containerColor = Color.Gray,
-//                        ),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = primaryContainerDarkMediumContrast,
+                        ),
                     modifier =
                         Modifier
                             .width(200.dp),
                 ) {
                     Text(
                         text = "登録する",
-                        color = Color.White,
+                        color = onPrimaryDark,
                     )
                 }
             }
