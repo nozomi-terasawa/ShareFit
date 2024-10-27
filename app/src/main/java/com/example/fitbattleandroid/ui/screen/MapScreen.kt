@@ -51,10 +51,6 @@ fun MapScreen(
     val currentLocation = remember { mutableStateOf(locationData) }
     val permissionGranted = remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        geofenceViewModel.connectWebSocket()
-    }
-
     if (permissionGranted.value) {
         LaunchedEffect(Unit) {
             scope.launch(Dispatchers.IO) {
