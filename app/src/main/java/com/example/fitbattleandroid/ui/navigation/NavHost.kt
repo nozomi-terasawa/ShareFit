@@ -33,6 +33,8 @@ import com.example.fitbattleandroid.ui.screen.FitnessMemory
 import com.example.fitbattleandroid.ui.screen.LoginScreen
 import com.example.fitbattleandroid.ui.screen.MapScreen
 import com.example.fitbattleandroid.ui.screen.RegistrationScreen
+import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
+import com.example.fitbattleandroid.ui.theme.primaryLight
 import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
 import com.example.fitbattleandroid.viewmodel.HealthConnectViewModel
 import com.example.fitbattleandroid.viewmodel.LocationViewModel
@@ -132,7 +134,7 @@ fun MainNavigation(
         bottomBar = {
             BottomNavigation(
                 modifier = Modifier.navigationBarsPadding(),
-                backgroundColor = Color.Gray,
+                backgroundColor = primaryContainerDarkMediumContrast,
             ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
