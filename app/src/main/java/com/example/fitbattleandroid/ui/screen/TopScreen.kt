@@ -19,12 +19,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.R
@@ -66,7 +64,7 @@ fun TopScreen(navController: NavController) {
                 )
             }
 
-            val image = painterResource(R.drawable.dall_e_2024_10_27_12_33_00___a_professional_and_corporate_style_logo_design_for__sharefit___incorporating_the_text_with_a_subtle_fitness_or_wellness_related_element_such_as_a_smal__1_)
+            val image = painterResource(R.drawable.title)
             Image(
                 painter = image,
                 contentDescription = null,
