@@ -1,21 +1,27 @@
 package com.example.fitbattleandroid.ui.screen
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -24,67 +30,163 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.fitbattleandroid.R
+import androidx.health.connect.client.HealthConnectClient
 import com.example.fitbattleandroid.ui.common.ShowCurrentTimeAndRemainingTime
+import com.example.fitbattleandroid.ui.theme.onPrimaryDark
+import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
+import com.example.fitbattleandroid.viewmodel.HealthConnectViewModel
+import com.websarva.wings.android.myapplication.FireAnimeModule
+import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
 
 @Composable
-fun FitnessMemory(modifier: Modifier) {
-    var calories by remember { mutableStateOf(("250")) }
+fun FitnessMemory(
+    modifier: Modifier,
+    healthConnectClient: HealthConnectClient,
+    calorieViewModel: HealthConnectViewModel,
+) {
+    val calorieUiState by remember { mutableStateOf(calorieViewModel.calorieUiState) }
+    val currentCalorieStr = calorieUiState.value.calorie
+    val scope = rememberCoroutineScope()
+
+    // 取得開始時間
+    val startLocalDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT) // 　今日の0時から
+    val startEpochMilli = startLocalDateTime.toInstant(ZoneOffset.ofHours(9)).toEpochMilli()
+
+    // 取得終了時間
+    val endLocalDateTime = LocalDateTime.now()
+    val endEpochMilli = endLocalDateTime.toInstant(ZoneOffset.ofHours(9)).toEpochMilli()
+
     Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier =
             Modifier
-                .fillMaxSize(),
-        // 画面全体を使用
-        verticalArrangement = Arrangement.Center, // 子要素を上から配置
-        horizontalAlignment = Alignment.CenterHorizontally, // 子要素を左揃え
+                .fillMaxSize()
+                .imePadding(),
     ) {
-        Text(
-            text = "消費カロリー",
-            fontSize = 22.sp, // 大きなフォントサイズ
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-        )
-        Text(
-            text = "today", // ヘッダーのテキスト
-            fontSize = 28.sp, // 大きなフォントサイズ
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
+        Box(
             modifier =
                 Modifier
-                    .padding(top = 100.dp), // ヘッダーの上部に余白を追加
-        )
-        CaloriMeter(
-            modifier = Modifier,
-            max = 2000f,
-            progress = calories.toFloat(),
-            // .padding(90.dp)
-        )
+                    .fillMaxWidth()
+                    .background(primaryContainerDarkMediumContrast)
+                    .padding(16.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = "Share Fit",
+                style =
+                    MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = onPrimaryDark,
+                    ),
+            )
+        }
 
-        ShowCurrentTimeAndRemainingTime(modifier)
+        Box {
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize(),
+                // 画面全体を使用
+                verticalArrangement = Arrangement.Center, // 子要素を上から配置
+                horizontalAlignment = Alignment.CenterHorizontally, // 子要素を左揃え
+            ) {
+                Text(
+                    text = "消費カロリー",
+                    fontSize = 22.sp, // 大きなフォントサイズ
+                    fontWeight = FontWeight.Bold,
+                    color = onPrimaryDark,
+                )
+                Text(
+                    text = "today", // ヘッダーのテキスト
+                    fontSize = 35.sp, // 大きなフォントサイズ
+                    fontWeight = FontWeight.Bold,
+                    color = onPrimaryDark,
+                    modifier =
+                        Modifier
+                            .padding(top = 10.dp), // ヘッダーの上部に余白を追加
+                )
+                CalorieMeter(
+                    modifier = Modifier,
+                    max = 10000f,
+                    progress = currentCalorieStr.toFloat(),
+                    currentCalorieStr = currentCalorieStr,
+                    // .padding(90.dp)
+                )
 
-        Text(
-            modifier =
-                Modifier
-                    .padding(top = 10.dp)
-                    .align(Alignment.CenterHorizontally),
-            text = "$calories kcal",
-            fontSize = 40.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-        )
+                LaunchedEffect(Unit) {
+                    calorieViewModel.readCalorie(
+                        healthConnectClient = healthConnectClient,
+                        startTime = Instant.ofEpochMilli(startEpochMilli),
+                        endTime = Instant.ofEpochMilli(endEpochMilli),
+                    )
+                }
+            }
+
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.size(550.dp))
+
+                Button(
+                    onClick = {
+                        scope.launch {
+                            calorieViewModel.readCalorie(
+                                healthConnectClient = healthConnectClient,
+                                startTime = Instant.ofEpochMilli(startEpochMilli),
+                                endTime = Instant.ofEpochMilli(endEpochMilli),
+                            )
+                        }
+                    },
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = primaryContainerDarkMediumContrast,
+                        ),
+                ) {
+                    Text(
+                        text = "最新のカロリーを取得",
+                        fontSize = 20.sp,
+                        color = onPrimaryDark,
+                    )
+                }
+
+                ShowCurrentTimeAndRemainingTime(modifier)
+
+                Text(
+                    modifier =
+                        Modifier
+                            .padding(top = 10.dp)
+                            .align(Alignment.CenterHorizontally),
+                    text = "$currentCalorieStr kcal",
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = onPrimaryDark,
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun CaloriMeter(
+fun CalorieMeter(
     modifier: Modifier,
     max: Float,
     progress: Float,
+    currentCalorieStr: String,
 ) {
     val circleAngle = 360f
     val angle = 240f
@@ -106,7 +208,7 @@ fun CaloriMeter(
             onDraw = {
                 // 外枠を描画
                 drawArc(
-                    color = Color.Black,
+                    color = onPrimaryDark,
                     startAngle = startAngle,
                     sweepAngle = angle,
                     useCenter = false,
@@ -165,20 +267,20 @@ fun CaloriMeter(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-//                FireAnimeModule()
-            Image(
-                painter = painterResource(id = R.drawable.pngtreeburning_fire_5637806),
-                contentDescription = null,
-                modifier = Modifier.size(80.dp),
-            )
+            FireAnimeModule()
+//            Image(
+//                painter = painterResource(id = R.drawable.pngtreeburning_fire_5637806),
+//                contentDescription = null,
+//                modifier = Modifier.size(150.dp),
+//            )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "0/${max.toInt()}",
+                text = "$currentCalorieStr/${max.toInt()}.0kcal",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = onPrimaryDark,
                 modifier = Modifier.padding(top = 8.dp), // 画像の下に少しスペースを追加
             )
         }
@@ -188,5 +290,11 @@ fun CaloriMeter(
 @Preview(showSystemUi = true)
 @Composable
 fun FitnessMemoryPreview() {
-    FitnessMemory(modifier = Modifier)
+    val context = LocalContext.current
+
+    FitnessMemory(
+        modifier = Modifier,
+        healthConnectClient = HealthConnectClient.getOrCreate(context),
+        calorieViewModel = HealthConnectViewModel(),
+    )
 }

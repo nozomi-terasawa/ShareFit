@@ -46,7 +46,7 @@ fun FireAnimeModule() {
         Image(
             painter = fire,
             contentDescription = null,
-            modifier = Modifier.size(100.dp),
+            modifier = Modifier.size(150.dp),
         )
 
         fireParticles.forEach { particle ->
@@ -83,7 +83,7 @@ fun FireParticle(
         contentDescription = null,
         modifier =
             Modifier
-                .size(5.dp)
+                .size(7.dp)
                 .graphicsLayer(
                     translationX = offsetX,
                     translationY = offsetY - 50f,

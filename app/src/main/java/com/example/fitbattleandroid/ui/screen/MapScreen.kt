@@ -5,10 +5,17 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,10 +27,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fitbattleandroid.model.EntryGeoFenceReq
 import com.example.fitbattleandroid.ui.permissioncheck.LocationPermissionRequest
+import com.example.fitbattleandroid.ui.theme.onPrimaryDark
+import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
+import com.example.fitbattleandroid.ui.theme.primaryContainerLight
 import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
 import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
 import com.example.fitbattleandroid.viewmodel.LocationData
@@ -37,6 +49,8 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
+// 省略
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -63,7 +77,10 @@ fun MapScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .imePadding(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -84,36 +101,89 @@ fun MapScreen(
             backgroundPermissionGranted = backgroundPermissionGranted,
         )
 
-        Button(onClick = {
-            if (backgroundPermissionGranted.value) {
-                geofenceViewModel.addGeofence()
-                geofenceViewModel.registerGeofence()
-                scope.launch(Dispatchers.IO) {
-                    val response =
-                        healthDataApiViewModel.sendGeoFenceEntryRequest(
-                            EntryGeoFenceReq(
-                                userId = 12,
-                                geoFenceId = 2,
-                                entryTime = "2021-10-01T10:00:00.391Z",
-                            ),
-                        )
-                }
-            }
-        }) {
-            Text(text = "ジオフェンスを追加")
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(primaryContainerDarkMediumContrast)
+                    .padding(16.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = "Share Fit",
+                style =
+                    MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = onPrimaryDark,
+                    ),
+            )
         }
 
-        ShowMap(
-            modifier = Modifier.fillMaxSize(),
-            locationData =
-                LocationData(
-                    currentLocation.value.latitude,
-                    currentLocation.value.longitude,
-                    0,
-                ),
-            geofenceList = geofenceList.toList(),
-            permissionState = permissionGranted.value,
-        )
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier =
+                Modifier
+                    .background(primaryContainerLight)
+                    .fillMaxSize(),
+        ) {
+            LocationPermissionRequest(
+                requestPermissionLauncher = requestPermissionLauncher,
+                fetchLocation = {
+                    scope.launch(Dispatchers.IO) {
+                        locationViewModel.fetchLocation()
+                    }
+                },
+                updatePriority = { priority ->
+                    locationViewModel.updatePriority(priority)
+                    locationViewModel.createLocationRequest()
+                },
+                onPermissionGranted = { boolean ->
+                    permissionGranted.value = boolean
+                },
+                backgroundPermissionGranted = backgroundPermissionGranted,
+            )
+
+            Button(
+                onClick = {
+                    if (backgroundPermissionGranted.value) {
+                        geofenceViewModel.addGeofence()
+                        geofenceViewModel.registerGeofence()
+                        scope.launch(Dispatchers.IO) {
+                            val response =
+                                healthDataApiViewModel.sendGeoFenceEntryRequest(
+                                    EntryGeoFenceReq(
+                                        userId = 12,
+                                        geoFenceId = 2,
+                                        entryTime = "2021-10-01T10:00:00.391Z",
+                                    ),
+                                )
+                        }
+                    }
+                },
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = primaryContainerDarkMediumContrast,
+                    ),
+            ) {
+                Text(
+                    text = "ジオフェンスを追加",
+                    color = onPrimaryDark,
+                )
+            }
+
+            ShowMap(
+                modifier = Modifier.fillMaxSize(),
+                locationData =
+                    LocationData(
+                        currentLocation.value.latitude,
+                        currentLocation.value.longitude,
+                        0,
+                    ),
+                geofenceList = geofenceList.toList(),
+                permissionState = permissionGranted.value,
+            )
+        }
     }
 }
 

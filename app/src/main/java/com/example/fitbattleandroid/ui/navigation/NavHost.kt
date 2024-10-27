@@ -1,7 +1,6 @@
 package com.example.fitbattleandroid.ui.navigation
 
 import android.os.Build
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -21,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.health.connect.client.HealthConnectClient
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -34,6 +34,7 @@ import com.example.fitbattleandroid.ui.screen.LoginScreen
 import com.example.fitbattleandroid.ui.screen.MapScreen
 import com.example.fitbattleandroid.ui.screen.RegistrationScreen
 import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
+import com.example.fitbattleandroid.viewmodel.HealthConnectViewModel
 import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
 import com.example.fitbattleandroid.viewmodel.LocationViewModel
 import com.websarva.wings.android.myapplication.TopScreen
@@ -71,34 +72,9 @@ fun App(
     geofenceViewModel: GeofencingClientViewModel = viewModel(),
     dataApiViewModel: HealthDataApiViewModel = viewModel(),
     backgroundPermissionGranted: MutableState<Boolean>,
+    healthConnectClient: HealthConnectClient,
 ) {
     val navController = rememberNavController()
-    // すれ違った人たちの仮のデータ TODO　サーバーサイドから取得
-    /*
-    val encounterHistoryList =
-        listOf(
-            EncounterUser(
-                userId = "1",
-                userName = "フィットネス 太郎",
-                userIcon = "icon1",
-                calorie = 100,
-            ),
-            EncounterUser(
-                userId = "2",
-                userName = "フィットネス 花子",
-                userIcon = "icon2",
-                calorie = 200,
-            ),
-            EncounterUser(
-                userId = "3",
-                userName = "フィット・ネス次郎",
-                userIcon = "icon3",
-                calorie = 300,
-            ),
-        )
-
-     */
-
     NavHost(
         navController,
         startDestination = Screen.Top.route,
@@ -113,7 +89,7 @@ fun App(
                 geofenceViewModel,
                 dataApiViewModel,
                 backgroundPermissionGranted,
-                // encounterHistoryList,
+                healthConnectClient,
             )
         }
     }
@@ -127,7 +103,7 @@ fun MainNavigation(
     geofenceViewModel: GeofencingClientViewModel,
     dataAPIViewModel: HealthDataApiViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
-    // encounterHistoryList: List<EncounterUser>,
+    healthConnectClient: HealthConnectClient,
 ) {
     val navController = rememberNavController()
 
@@ -195,14 +171,16 @@ fun MainNavigation(
                 )
             }
             composable(Screen.MyData.route) {
-                FitnessMemory(modifier = Modifier)
+                FitnessMemory(
+                    modifier = Modifier,
+                    healthConnectClient,
+                    calorieViewModel = HealthConnectViewModel(), // TODO みろ！
+                )
             }
             composable(Screen.EncounterList.route) {
                 val encounterHistoryList by dataAPIViewModel.encounterMembers.collectAsState()
-                Log.e("result1234567890", encounterHistoryList.toString())
                 EncounterHistoryScreen(
                     modifier = Modifier,
-                    dataAPIViewModel = dataAPIViewModel,
                     list = encounterHistoryList,
                     // encounterHistoryList,
                 )
