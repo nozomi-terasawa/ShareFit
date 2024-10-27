@@ -23,7 +23,8 @@ class GeofencingClientViewModel(
     application: Application,
 ) : AndroidViewModel(application) {
     private val applicationContext = application.applicationContext
-    private val geofencingClient: GeofencingClient = LocationServices.getGeofencingClient(applicationContext)
+    private val geofencingClient: GeofencingClient =
+        LocationServices.getGeofencingClient(applicationContext)
 
     private var _geofenceList = mutableStateListOf<Geofence>()
     val geofenceList: List<Geofence> = _geofenceList
@@ -33,15 +34,20 @@ class GeofencingClientViewModel(
         mutableListOf(
             GeofenceData(
                 "KIT",
-                36.53017077369422,
-                136.62784179442636,
+                36.53252814659672,
+                136.62909188593616,
                 100f,
             ),
         )
 
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(applicationContext, GeofenceBroadcastReceiver::class.java)
-        PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
+        PendingIntent.getBroadcast(
+            applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE,
+        )
     }
 
     // TODO entryが更新されたら呼び出す

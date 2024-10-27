@@ -16,9 +16,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.health.connect.client.HealthConnectClient
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -28,15 +28,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.ui.screen.EncounterHistoryScreen
-import com.example.fitbattleandroid.ui.screen.EncounterUser
 import com.example.fitbattleandroid.ui.screen.FitnessMemory
 import com.example.fitbattleandroid.ui.screen.LoginScreen
 import com.example.fitbattleandroid.ui.screen.MapScreen
 import com.example.fitbattleandroid.ui.screen.RegistrationScreen
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
-import com.example.fitbattleandroid.ui.theme.primaryLight
 import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
 import com.example.fitbattleandroid.viewmodel.HealthConnectViewModel
+import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
 import com.example.fitbattleandroid.viewmodel.LocationViewModel
 import com.websarva.wings.android.myapplication.TopScreen
 
@@ -71,33 +70,11 @@ fun App(
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
     locationViewModel: LocationViewModel,
     geofenceViewModel: GeofencingClientViewModel = viewModel(),
+    dataApiViewModel: HealthDataApiViewModel = viewModel(),
     backgroundPermissionGranted: MutableState<Boolean>,
     healthConnectClient: HealthConnectClient,
 ) {
     val navController = rememberNavController()
-    // すれ違った人たちの仮のデータ TODO　サーバーサイドから取得
-    val encounterHistoryList =
-        listOf(
-            EncounterUser(
-                userId = "1",
-                userName = "フィットネス 太郎",
-                userIcon = "icon1",
-                calorie = 100,
-            ),
-            EncounterUser(
-                userId = "2",
-                userName = "フィットネス 花子",
-                userIcon = "icon2",
-                calorie = 200,
-            ),
-            EncounterUser(
-                userId = "3",
-                userName = "フィット・ネス次郎",
-                userIcon = "icon3",
-                calorie = 300,
-            ),
-        )
-
     NavHost(
         navController,
         startDestination = Screen.Top.route,
@@ -110,8 +87,8 @@ fun App(
                 requestPermissionLauncher,
                 locationViewModel,
                 geofenceViewModel,
+                dataApiViewModel,
                 backgroundPermissionGranted,
-                encounterHistoryList,
                 healthConnectClient,
             )
         }
@@ -124,8 +101,8 @@ fun MainNavigation(
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
     locationViewModel: LocationViewModel,
     geofenceViewModel: GeofencingClientViewModel,
+    dataAPIViewModel: HealthDataApiViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
-    encounterHistoryList: List<EncounterUser>,
     healthConnectClient: HealthConnectClient,
 ) {
     val navController = rememberNavController()
@@ -190,19 +167,22 @@ fun MainNavigation(
                     locationViewModel,
                     geofenceViewModel,
                     backgroundPermissionGranted,
+                    healthDataApiViewModel = dataAPIViewModel,
                 )
             }
             composable(Screen.MyData.route) {
                 FitnessMemory(
                     modifier = Modifier,
                     healthConnectClient,
-                    calorieViewModel = HealthConnectViewModel(),
+                    calorieViewModel = HealthConnectViewModel(), // TODO みろ！
                 )
             }
             composable(Screen.EncounterList.route) {
+                val encounterHistoryList by dataAPIViewModel.encounterMembers.collectAsState()
                 EncounterHistoryScreen(
                     modifier = Modifier,
-                    encounterHistoryList,
+                    list = encounterHistoryList,
+                    // encounterHistoryList,
                 )
             }
         }

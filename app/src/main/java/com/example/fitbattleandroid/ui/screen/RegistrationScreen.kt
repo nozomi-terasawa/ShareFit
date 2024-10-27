@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,30 +46,31 @@ fun RegistrationScreen(
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(primaryContainerLight)
+                .background(primaryContainerLight),
     ) {
         Column(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier =
-            Modifier
-                .fillMaxSize()
-                .imePadding()
-        ){
-
+                Modifier
+                    .fillMaxSize()
+                    .imePadding(),
+        ) {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(primaryContainerDarkMediumContrast)
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(primaryContainerDarkMediumContrast)
+                        .padding(16.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = "Share Fit",
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = onPrimaryDark,
-                    )
+                    style =
+                        MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = onPrimaryDark,
+                        ),
                 )
             }
 
@@ -110,8 +110,8 @@ fun RegistrationScreen(
                             containerColor = primaryContainerDarkMediumContrast,
                         ),
                     modifier =
-                    modifier
-                        .width(200.dp),
+                        modifier
+                            .width(200.dp),
                     // .border(BorderStroke(1.dp, Color.Blue),
                 ) {
                     Text("新規登録", color = Color.White)
@@ -125,9 +125,9 @@ fun RegistrationScreen(
                     },
                     shape = RoundedCornerShape(20.dp),
                     colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                    ),
+                        ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                        ),
                 ) {
                     Text(
                         text = "登録済みの方はこちら",

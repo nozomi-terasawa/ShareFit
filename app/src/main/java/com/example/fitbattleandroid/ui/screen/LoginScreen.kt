@@ -29,15 +29,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.ui.common.CommonOutlinedTextField
-import com.example.fitbattleandroid.ui.common.GrayZone
 import com.example.fitbattleandroid.ui.navigation.Screen
-import com.example.fitbattleandroid.ui.theme.inversePrimaryLight
 import com.example.fitbattleandroid.ui.theme.onPrimaryDark
-import com.example.fitbattleandroid.ui.theme.onPrimaryLight
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
 import com.example.fitbattleandroid.ui.theme.primaryContainerLight
-import com.example.fitbattleandroid.ui.theme.primaryLightMediumContrast
-import com.example.fitbattleandroid.ui.theme.tertiaryDarkMediumContrast
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -49,34 +44,33 @@ fun LoginScreen(navController: NavController) {
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(primaryContainerLight)
+                .background(primaryContainerLight),
     ) {
-
         Column(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier =
-            Modifier
-                .fillMaxSize()
-                .imePadding()
+                Modifier
+                    .fillMaxSize()
+                    .imePadding(),
         ) {
-
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(primaryContainerDarkMediumContrast)
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(primaryContainerDarkMediumContrast)
+                        .padding(16.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = "Share Fit",
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = onPrimaryDark,
-                    )
+                    style =
+                        MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = onPrimaryDark,
+                        ),
                 )
             }
-
 
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -118,7 +112,7 @@ fun LoginScreen(navController: NavController) {
                 ) {
                     Text(
                         text = "ログイン",
-                        color = onPrimaryDark
+                        color = onPrimaryDark,
                     )
                 }
                 Button(
@@ -137,7 +131,7 @@ fun LoginScreen(navController: NavController) {
                     Text(
                         text = "新規登録の方はこちら",
                         fontSize = 10.sp,
-                        color = onPrimaryDark
+                        color = onPrimaryDark,
                     )
                 }
             }

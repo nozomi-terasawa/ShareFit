@@ -37,30 +37,31 @@ fun TopScreen(navController: NavController) {
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(primaryContainerLight)
+                .background(primaryContainerLight),
     ) {
         Column(
-          verticalArrangement = Arrangement.Top,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier =
-            Modifier
-                .fillMaxSize()
-                .imePadding()
+                Modifier
+                    .fillMaxSize()
+                    .imePadding(),
         ) {
-
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(primaryContainerDarkMediumContrast)
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(primaryContainerDarkMediumContrast)
+                        .padding(16.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = "Share Fit",
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = onPrimaryDark,
-                    )
+                    style =
+                        MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = onPrimaryDark,
+                        ),
                 )
             }
 

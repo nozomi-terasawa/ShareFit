@@ -21,10 +21,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
+import com.example.fitbattleandroid.data.MemberInfo
 import com.example.fitbattleandroid.ui.theme.inversePrimaryLight
 import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
@@ -40,29 +41,31 @@ import com.example.fitbattleandroid.ui.theme.primaryContainerLight
 @Composable
 fun EncounterHistoryScreen(
     modifier: Modifier,
-    encounterHistoryList: List<EncounterUser>,
+    list: List<MemberInfo> = emptyList(),
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier =
-        Modifier
-            .fillMaxSize()
-            .imePadding()
+            Modifier
+                .fillMaxSize()
+                .imePadding(),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(primaryContainerDarkMediumContrast)
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(primaryContainerDarkMediumContrast)
+                    .padding(16.dp),
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = "Share Fit",
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = onPrimaryDark,
-                )
+                style =
+                    MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = onPrimaryDark,
+                    ),
             )
         }
 
@@ -78,14 +81,16 @@ fun EncounterHistoryScreen(
                 color = onPrimaryDark,
             )
 
-            LazyColumn(modifier) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+            ) {
                 items(
-                    items = encounterHistoryList,
-                    key = { encounterHistoryList -> encounterHistoryList.userId },
-                ) {
+                    items = list,
+                    key = { encounterUser -> encounterUser.id },
+                ) { encounterUser ->
                     EncounterHistoryItem(
                         modifier = Modifier.fillMaxWidth(),
-                        encounterUser = it,
+                        encounterUser = encounterUser,
                     )
                 }
             }
@@ -96,24 +101,23 @@ fun EncounterHistoryScreen(
 @Composable
 fun EncounterHistoryItem(
     modifier: Modifier,
-    encounterUser: EncounterUser,
+    encounterUser: MemberInfo,
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = inversePrimaryLight // inversePrimaryLightを使用
-        ),
+        colors =
+            CardDefaults.cardColors(
+                containerColor = inversePrimaryLight,
+            ),
         modifier =
             Modifier
                 .padding(8.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
     ) {
         Row(
             verticalAlignment = Alignment.Top,
             modifier = Modifier.padding(8.dp),
         ) {
-            // 本番はCoilに変更
-            // UserIcon(imageUrl = encounterUser.userIcon)
             Box(
                 modifier =
                     Modifier
@@ -121,20 +125,19 @@ fun EncounterHistoryItem(
                         .padding(4.dp)
                         .clip(CircleShape)
                         .background(primaryContainerLight),
-                // .background(MaterialTheme.colorScheme.background)
             )
             Spacer(modifier = Modifier.height(8.dp))
 
             Column {
                 Text(
-                    text = encounterUser.userName,
+                    text = encounterUser.name,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(4.dp),
                     color = onPrimaryDark,
                 )
                 Text(
-                    text = "昨日の総消費カロリー：${encounterUser.calorie}cal",
+                    text = "昨日の総消費カロリー：1,700kcal",
                     color = onPrimaryDark,
                 )
             }
@@ -164,47 +167,10 @@ fun EncounterHistoryItemPreview() {
     EncounterHistoryItem(
         modifier = Modifier.fillMaxSize(),
         encounterUser =
-            EncounterUser(
-                userId = "1",
-                userName = "フィットネス太郎",
-                userIcon = "icon1",
-                calorie = 100,
+            MemberInfo(
+                id = 1,
+                name = "フィットネス 太郎",
+                iconUrl = "icon1",
             ),
     )
 }
-
-@Preview
-@Composable
-fun EncounterHistoryScreenPreview() {
-    EncounterHistoryScreen(
-        modifier = Modifier.fillMaxSize(),
-        encounterHistoryList =
-            listOf(
-                EncounterUser(
-                    userId = "1",
-                    userName = "フィットネス 太郎",
-                    userIcon = "icon1",
-                    calorie = 100,
-                ),
-                EncounterUser(
-                    userId = "2",
-                    userName = "フィットネス 花子",
-                    userIcon = "icon2",
-                    calorie = 200,
-                ),
-                EncounterUser(
-                    userId = "3",
-                    userName = "フィット・ネス次郎",
-                    userIcon = "icon3",
-                    calorie = 300,
-                ),
-            ),
-    )
-}
-
-data class EncounterUser(
-    val userId: String,
-    val userName: String,
-    val userIcon: String,
-    val calorie: Int,
-)

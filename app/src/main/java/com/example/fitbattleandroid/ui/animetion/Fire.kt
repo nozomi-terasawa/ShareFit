@@ -43,12 +43,11 @@ fun FireAnimeModule() {
         val image = painterResource(R.drawable.pngtreeburning_fire_5637806)
         val fire = painterResource(R.drawable.pngtreeburning_fire_5637806)
 
-
         var fireOffsetX by remember { mutableStateOf(0f) }
 
         LaunchedEffect(Unit) {
-            while (true){
-                fireOffsetX = Random.nextFloat() * 5f -5f
+            while (true) {
+                fireOffsetX = Random.nextFloat() * 5f - 5f
                 delay(100)
             }
         }
@@ -56,11 +55,12 @@ fun FireAnimeModule() {
         Image(
             painter = fire,
             contentDescription = null,
-            modifier = Modifier
-                .size(150.dp)
-                .graphicsLayer (
-                    translationX = fireOffsetX
-                ),
+            modifier =
+                Modifier
+                    .size(150.dp)
+                    .graphicsLayer(
+                        translationX = fireOffsetX,
+                    ),
         )
 
         fireParticles.forEach { particle ->
