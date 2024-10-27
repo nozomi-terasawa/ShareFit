@@ -9,23 +9,13 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.fitbattleandroid.data.NewPassingInfo
 import com.example.fitbattleandroid.receiver.GeofenceBroadcastReceiver
-import com.example.fitbattleandroid.repositoryImpl.WebSocketRepositoryImpl
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.websocket.WebSockets
-import io.ktor.websocket.Frame
-import io.ktor.websocket.readText
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 private const val TAG = "GeofencingClientViewModel"
 
@@ -35,34 +25,6 @@ class GeofencingClientViewModel(
     private val applicationContext = application.applicationContext
     private val geofencingClient: GeofencingClient =
         LocationServices.getGeofencingClient(applicationContext)
-
-    private val webSocketRepository =
-        WebSocketRepositoryImpl(
-            client =
-                HttpClient(CIO) {
-                    install(WebSockets)
-                },
-        )
-
-    fun connectWebSocket() {
-        viewModelScope.launch {
-            webSocketRepository.connect {
-                for (message in incoming) {
-                    when (message) {
-                        is Frame.Text -> {
-                            val text = message.readText()
-                            val parsedMessage = Json.decodeFromString<NewPassingInfo>(text)
-                            Log.d("WebSocket⭐️", parsedMessage.toString())
-                        }
-                        is Frame.Binary -> TODO()
-                        is Frame.Close -> TODO()
-                        is Frame.Ping -> TODO()
-                        is Frame.Pong -> TODO()
-                    }
-                }
-            }
-        }
-    }
 
     private var _geofenceList = mutableStateListOf<Geofence>()
     val geofenceList: List<Geofence> = _geofenceList
