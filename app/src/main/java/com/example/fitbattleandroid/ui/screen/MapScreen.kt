@@ -3,14 +3,12 @@ package com.example.fitbattleandroid.ui.screen
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,7 +35,6 @@ import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.rememberCameraPositionState
-import io.ktor.client.call.body
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -49,7 +46,7 @@ fun MapScreen(
     locationViewModel: LocationViewModel,
     geofenceViewModel: GeofencingClientViewModel = viewModel(),
     backgroundPermissionGranted: MutableState<Boolean>,
-    healthDataApiViewModel: HealthDataApiViewModel = viewModel()
+    healthDataApiViewModel: HealthDataApiViewModel,
 ) {
     val locationData = locationViewModel.location.collectAsState().value
     val geofenceList = geofenceViewModel.geofenceList
@@ -92,13 +89,14 @@ fun MapScreen(
                 geofenceViewModel.addGeofence()
                 geofenceViewModel.registerGeofence()
                 scope.launch(Dispatchers.IO) {
-                    val response = healthDataApiViewModel.sendGeoFenceEntryRequest(
-                        EntryGeoFenceReq(
-                            userId = 12,
-                            geoFenceId = 2,
-                            entryTime = "2021-10-01T10:00:00.391Z",
+                    val response =
+                        healthDataApiViewModel.sendGeoFenceEntryRequest(
+                            EntryGeoFenceReq(
+                                userId = 12,
+                                geoFenceId = 2,
+                                entryTime = "2021-10-01T10:00:00.391Z",
+                            ),
                         )
-                    )
                 }
             }
         }) {

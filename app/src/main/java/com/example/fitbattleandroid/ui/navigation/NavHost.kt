@@ -1,6 +1,7 @@
 package com.example.fitbattleandroid.ui.navigation
 
 import android.os.Build
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -16,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -189,15 +191,19 @@ fun MainNavigation(
                     locationViewModel,
                     geofenceViewModel,
                     backgroundPermissionGranted,
+                    healthDataApiViewModel = dataAPIViewModel,
                 )
             }
             composable(Screen.MyData.route) {
                 FitnessMemory(modifier = Modifier)
             }
             composable(Screen.EncounterList.route) {
+                val encounterHistoryList by dataAPIViewModel.encounterMembers.collectAsState()
+                Log.e("result1234567890", encounterHistoryList.toString())
                 EncounterHistoryScreen(
                     modifier = Modifier,
                     dataAPIViewModel = dataAPIViewModel,
+                    list = encounterHistoryList,
                     // encounterHistoryList,
                 )
             }

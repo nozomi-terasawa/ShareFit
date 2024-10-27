@@ -13,7 +13,3 @@ data class SaveFitnessReq(
 data class SaveFitnessRes(
     val success: Boolean,
 )
-
-
-
-

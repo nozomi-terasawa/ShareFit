@@ -5,7 +5,6 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
-
 }
 
 android {
@@ -69,7 +68,6 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
     // serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
-
 
     implementation(libs.ktor.core)
     implementation(libs.ktor.cio)

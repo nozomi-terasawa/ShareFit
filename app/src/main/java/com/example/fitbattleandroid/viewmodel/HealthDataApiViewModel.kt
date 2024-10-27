@@ -1,10 +1,5 @@
 package com.example.fitbattleandroid.viewmodel
 
-import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.example.fitbattleandroid.data.EntryGeoFenceRes
 import com.example.fitbattleandroid.data.MemberInfo
@@ -19,45 +14,46 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.json.Json
 
-class HealthDataApiViewModel: ViewModel() {
-    private val _encounterMembers = mutableStateListOf<MemberInfo>()
-    val encounterMembers: SnapshotStateList<MemberInfo> get() = _encounterMembers
+class HealthDataApiViewModel : ViewModel() {
+    private val _encounterMembers = MutableStateFlow<List<MemberInfo>>(emptyList())
+    val encounterMembers: StateFlow<List<MemberInfo>> = _encounterMembers.asStateFlow()
 
-
-    private val client = HttpClient {
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    ignoreUnknownKeys = true
-                    isLenient = true
-                }
-            )
+    private val client =
+        HttpClient {
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        ignoreUnknownKeys = true
+                        isLenient = true
+                    },
+                )
+            }
         }
-    }
 
     // ジオフェンス入室リクエスト関数
     suspend fun sendGeoFenceEntryRequest(entry: EntryGeoFenceReq): EntryGeoFenceRes {
-        val res =  client.post("http://192.168.224.234:7070/api/v1/geofence/entry") {
-            contentType(ContentType.Application.Json)
-            setBody(entry)
-        }
+        val res =
+            client.post("http://192.168.224.234:7070/api/v1/geofence/entry") {
+                contentType(ContentType.Application.Json)
+                setBody(entry)
+            }
         // レスポンスからボディを取得して変数に追加
         val responseBody = res.body<EntryGeoFenceRes>()
         for (member in responseBody.passingMember) {
-            _encounterMembers.add(member)
+            _encounterMembers.value += member
         }
-        Log.d("result", _encounterMembers.toString())
-
         return responseBody
     }
 
     // フィットネスデータの保存リクエスト
-    suspend fun sendFitnessSave(request: SaveFitnessReq): HttpResponse {
-        return client.post("http://192.168.224.234:7070/api/v1/fitness/save") {
+    suspend fun sendFitnessSave(request: SaveFitnessReq): HttpResponse =
+        client.post("http://192.168.224.234:7070/api/v1/fitness/save") {
             contentType(ContentType.Application.Json)
             setBody(request)
         }
-    }
 }
