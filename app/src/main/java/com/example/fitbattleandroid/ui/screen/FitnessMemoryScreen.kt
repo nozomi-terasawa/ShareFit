@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,92 +77,111 @@ fun FitnessMemory(
             .fillMaxSize()
             .imePadding()
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(primaryContainerDarkMediumContrast)
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Share Fit",
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = onPrimaryDark,
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(primaryContainerDarkMediumContrast)
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Share Fit",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = onPrimaryDark,
+                    )
                 )
-            )
-        }
+            }
 
-        Column(
-            modifier =
-            Modifier
-                .fillMaxSize(),
-            // 画面全体を使用
-            verticalArrangement = Arrangement.Center, // 子要素を上から配置
-            horizontalAlignment = Alignment.CenterHorizontally, // 子要素を左揃え
-        ) {
-            Text(
-                text = "消費カロリー",
-                fontSize = 22.sp, // 大きなフォントサイズ
-                fontWeight = FontWeight.Bold,
-                color = onPrimaryDark,
-            )
-            Text(
-                text = "today", // ヘッダーのテキスト
-                fontSize = 28.sp, // 大きなフォントサイズ
-                fontWeight = FontWeight.Bold,
-                color = onPrimaryDark,
-                modifier =
-                Modifier
-                    .padding(top = 100.dp), // ヘッダーの上部に余白を追加
-        )
-        CalorieMeter(
-            modifier = Modifier,
-            max = 10000f,
-            progress = currentCalorieStr.toFloat(),
-            currentCalorieStr = currentCalorieStr,
-            // .padding(90.dp)
-        )
+            Box(
+            ) {
+                Column(
+                    modifier =
+                    Modifier
+                        .fillMaxSize(),
+                    // 画面全体を使用
+                    verticalArrangement = Arrangement.Center, // 子要素を上から配置
+                    horizontalAlignment = Alignment.CenterHorizontally, // 子要素を左揃え
+                ) {
+                    Text(
+                        text = "消費カロリー",
+                        fontSize = 22.sp, // 大きなフォントサイズ
+                        fontWeight = FontWeight.Bold,
+                        color = onPrimaryDark,
+                    )
+                    Text(
+                        text = "today", // ヘッダーのテキスト
+                        fontSize = 35.sp, // 大きなフォントサイズ
+                        fontWeight = FontWeight.Bold,
+                        color = onPrimaryDark,
+                        modifier =
+                        Modifier
+                            .padding(top = 10.dp), // ヘッダーの上部に余白を追加
+                    )
+                    CalorieMeter(
+                        modifier = Modifier,
+                        max = 10000f,
+                        progress = currentCalorieStr.toFloat(),
+                        currentCalorieStr = currentCalorieStr,
+                        // .padding(90.dp)
+                    )
 
-        LaunchedEffect(Unit) {
-            calorieViewModel.readCalorie(
-                healthConnectClient = healthConnectClient,
-                startTime = Instant.ofEpochMilli(startEpochMilli),
-                endTime = Instant.ofEpochMilli(endEpochMilli),
-            )
-        }
+                    LaunchedEffect(Unit) {
+                        calorieViewModel.readCalorie(
+                            healthConnectClient = healthConnectClient,
+                            startTime = Instant.ofEpochMilli(startEpochMilli),
+                            endTime = Instant.ofEpochMilli(endEpochMilli),
+                        )
+                    }
+                }
 
-        Button(
-            onClick = {
-                scope.launch {
-                    calorieViewModel.readCalorie(
-                        healthConnectClient = healthConnectClient,
-                        startTime = Instant.ofEpochMilli(startEpochMilli),
-                        endTime = Instant.ofEpochMilli(endEpochMilli),
+                Column(
+                    modifier =
+                    Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Spacer(modifier = Modifier.size(550.dp))
+
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                calorieViewModel.readCalorie(
+                                    healthConnectClient = healthConnectClient,
+                                    startTime = Instant.ofEpochMilli(startEpochMilli),
+                                    endTime = Instant.ofEpochMilli(endEpochMilli),
+                                )
+                            }
+                        },
+                        colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = primaryContainerDarkMediumContrast,
+                        ),
+                    ) {
+                        Text(
+                            text = "最新のカロリーを取得",
+                            fontSize = 20.sp,
+                            color = onPrimaryDark
+                        )
+                    }
+
+                    ShowCurrentTimeAndRemainingTime(modifier)
+
+                    Text(
+                        modifier =
+                        Modifier
+                            .padding(top = 10.dp)
+                            .align(Alignment.CenterHorizontally),
+                        text = "$currentCalorieStr kcal",
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = onPrimaryDark,
                     )
                 }
-            },
-        ) {
-            Text(
-                text = "最新のカロリーを取得",
-                fontSize = 20.sp,
-            )
-        }
+            }
 
-        ShowCurrentTimeAndRemainingTime(modifier)
-            ShowCurrentTimeAndRemainingTime(modifier)
-
-            Text(
-                modifier =
-                Modifier
-                    .padding(top = 10.dp)
-                    .align(Alignment.CenterHorizontally),
-                text = "$currentCalorieStr kcal",
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold,
-                color = onPrimaryDark,
-            )
-        }
     }
 }
 
@@ -255,7 +275,7 @@ fun CalorieMeter(
             Image(
                 painter = painterResource(id = R.drawable.pngtreeburning_fire_5637806),
                 contentDescription = null,
-                modifier = Modifier.size(80.dp),
+                modifier = Modifier.size(150.dp),
             )
 
             Spacer(modifier = Modifier.height(20.dp))

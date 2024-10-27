@@ -58,7 +58,7 @@ fun TopScreen(navController: NavController) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "FitBattle App",
+                    text = "Share Fit",
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = onPrimaryDark,
