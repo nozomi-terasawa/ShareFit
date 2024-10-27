@@ -82,6 +82,7 @@ fun MapScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(primaryContainerDarkMediumContrast)
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
