@@ -27,12 +27,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.ui.screen.EncounterHistoryScreen
-import com.example.fitbattleandroid.ui.screen.EncounterUser
 import com.example.fitbattleandroid.ui.screen.FitnessMemory
 import com.example.fitbattleandroid.ui.screen.LoginScreen
 import com.example.fitbattleandroid.ui.screen.MapScreen
 import com.example.fitbattleandroid.ui.screen.RegistrationScreen
 import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
+import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
 import com.example.fitbattleandroid.viewmodel.LocationViewModel
 import com.websarva.wings.android.myapplication.TopScreen
 
@@ -67,10 +67,12 @@ fun App(
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
     locationViewModel: LocationViewModel,
     geofenceViewModel: GeofencingClientViewModel = viewModel(),
+    dataApiViewModel: HealthDataApiViewModel = viewModel(),
     backgroundPermissionGranted: MutableState<Boolean>,
 ) {
     val navController = rememberNavController()
     // すれ違った人たちの仮のデータ TODO　サーバーサイドから取得
+    /*
     val encounterHistoryList =
         listOf(
             EncounterUser(
@@ -93,6 +95,8 @@ fun App(
             ),
         )
 
+     */
+
     NavHost(
         navController,
         startDestination = Screen.Top.route,
@@ -105,8 +109,9 @@ fun App(
                 requestPermissionLauncher,
                 locationViewModel,
                 geofenceViewModel,
+                dataApiViewModel,
                 backgroundPermissionGranted,
-                encounterHistoryList,
+                // encounterHistoryList,
             )
         }
     }
@@ -118,8 +123,9 @@ fun MainNavigation(
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
     locationViewModel: LocationViewModel,
     geofenceViewModel: GeofencingClientViewModel,
+    dataAPIViewModel: HealthDataApiViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
-    encounterHistoryList: List<EncounterUser>,
+    // encounterHistoryList: List<EncounterUser>,
 ) {
     val navController = rememberNavController()
 
@@ -191,7 +197,8 @@ fun MainNavigation(
             composable(Screen.EncounterList.route) {
                 EncounterHistoryScreen(
                     modifier = Modifier,
-                    encounterHistoryList,
+                    dataAPIViewModel = dataAPIViewModel,
+                    // encounterHistoryList,
                 )
             }
         }
