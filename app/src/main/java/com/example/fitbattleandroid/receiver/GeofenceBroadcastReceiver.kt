@@ -8,10 +8,21 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.example.fitbattleandroid.data.NewPassingInfo
 import com.example.fitbattleandroid.notification.sendGeofenceNotification
+import com.example.fitbattleandroid.repositoryImpl.WebSocketRepositoryImpl
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.websocket.WebSockets
+import io.ktor.websocket.Frame
+import io.ktor.websocket.readText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -50,6 +61,36 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
                         it,
                     )
                 }
+
+            // WebSocket通信
+            val webSocketRepository =
+                WebSocketRepositoryImpl(
+                    client =
+                        HttpClient(CIO) {
+                            install(WebSockets)
+                        },
+                )
+
+            // WebSocket通信
+            CoroutineScope(Dispatchers.IO).launch {
+                webSocketRepository.connect {
+                    for (message in incoming) {
+                        when (message) {
+                            is Frame.Text -> {
+                                val text = message.readText()
+                                val parsedMessage = Json.decodeFromString<NewPassingInfo>(text)
+                                sendGeofenceNotification(
+                                    context,
+                                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager,
+                                    "すれ違いました。",
+                                    parsedMessage.message,
+                                )
+                            }
+                            else -> { /*なにもしない*/ }
+                        }
+                    }
+                }
+            }
 
             sendGeofenceNotification(
                 context,
