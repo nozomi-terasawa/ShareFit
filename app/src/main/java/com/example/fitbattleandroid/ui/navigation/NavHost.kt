@@ -33,10 +33,9 @@ import com.example.fitbattleandroid.ui.screen.LoginScreen
 import com.example.fitbattleandroid.ui.screen.MapScreen
 import com.example.fitbattleandroid.ui.screen.RegistrationScreen
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
-import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
 import com.example.fitbattleandroid.viewmodel.HealthConnectViewModel
 import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
-import com.example.fitbattleandroid.viewmodel.LocationViewModel
+import com.example.fitbattleandroid.viewmodel.MapViewModel
 import com.websarva.wings.android.myapplication.TopScreen
 
 sealed class Screen(
@@ -68,9 +67,7 @@ val items =
 fun App(
     modifier: Modifier,
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
-    locationViewModel: LocationViewModel,
-    geofenceViewModel: GeofencingClientViewModel = viewModel(),
-    dataApiViewModel: HealthDataApiViewModel = viewModel(),
+    mapViewModel: MapViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
     healthConnectClient: HealthConnectClient,
 ) {
@@ -85,9 +82,8 @@ fun App(
         composable("main") {
             MainNavigation(
                 requestPermissionLauncher,
-                locationViewModel,
-                geofenceViewModel,
-                dataApiViewModel,
+                mapViewModel,
+                dataAPIViewModel = viewModel(),
                 backgroundPermissionGranted,
                 healthConnectClient,
             )
@@ -99,8 +95,7 @@ fun App(
 @Composable
 fun MainNavigation(
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
-    locationViewModel: LocationViewModel,
-    geofenceViewModel: GeofencingClientViewModel,
+    mapViewModel: MapViewModel,
     dataAPIViewModel: HealthDataApiViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
     healthConnectClient: HealthConnectClient,
@@ -164,8 +159,7 @@ fun MainNavigation(
                 MapScreen(
                     Modifier.padding(innerPadding),
                     requestPermissionLauncher,
-                    locationViewModel,
-                    geofenceViewModel,
+                    mapViewModel,
                     backgroundPermissionGranted,
                     healthDataApiViewModel = dataAPIViewModel,
                 )
