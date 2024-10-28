@@ -1,4 +1,4 @@
-package com.example.fitbattleandroid.data
+package com.example.fitbattleandroid.model
 
 import kotlinx.serialization.Serializable
 

@@ -30,12 +30,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.example.fitbattleandroid.model.EntryGeoFenceReq
+import com.example.fitbattleandroid.data.remote.EntryGeoFenceReq
+import com.example.fitbattleandroid.model.LocationData
 import com.example.fitbattleandroid.ui.permissioncheck.LocationPermissionRequest
 import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
 import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
-import com.example.fitbattleandroid.viewmodel.LocationData
 import com.example.fitbattleandroid.viewmodel.MapViewModel
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.maps.model.CameraPosition

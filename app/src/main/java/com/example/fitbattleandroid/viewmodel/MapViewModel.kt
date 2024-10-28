@@ -5,12 +5,13 @@ import android.app.Application
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Looper
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
+import com.example.fitbattleandroid.model.GeofenceData
+import com.example.fitbattleandroid.model.LocationData
 import com.example.fitbattleandroid.receiver.GeofenceBroadcastReceiver
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.Geofence
@@ -39,6 +40,17 @@ class MapViewModel(
         LocationServices.getGeofencingClient(applicationContext)
     private var _geofenceList = mutableStateListOf<Geofence>()
     val geofenceList: List<Geofence> = _geofenceList
+
+    // TODO サーバーサイドから受け取る
+    private val entry =
+        mutableListOf(
+            GeofenceData(
+                "KIT",
+                36.53252814659672,
+                136.62909188593616,
+                100f,
+            ),
+        )
 
     // 位置情報
     private var _location =
@@ -81,7 +93,7 @@ class MapViewModel(
     }
 
     // 　位置情報の設定
-    fun createLocationRequest(): LocationRequest =
+    private fun createLocationRequest(): LocationRequest =
         LocationRequest
             .Builder(5000)
             .setPriority(_location.value.priority)
@@ -93,7 +105,7 @@ class MapViewModel(
             val result =
                 Tasks.await(
                     fusedLocationClient.lastLocation
-                        .addOnSuccessListener { location: Location? -> // Log.d("result", "緯度: ${location?.latitude}, 経度: ${location?.longitude}")
+                        .addOnSuccessListener { location -> // Log.d("result", "緯度: ${location?.latitude}, 経度: ${location?.longitude}")
                         },
                 )
             _location.value =
@@ -129,17 +141,6 @@ class MapViewModel(
             fusedLocationClient.removeLocationUpdates(locationCallback)
         }
     }
-
-// TODO サーバーサイドから受け取る
-    private val entry =
-        mutableListOf(
-            GeofenceData(
-                "KIT",
-                36.53252814659672,
-                136.62909188593616,
-                100f,
-            ),
-        )
 
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(applicationContext, GeofenceBroadcastReceiver::class.java)
@@ -212,24 +213,3 @@ class MapViewModel(
         }
     }
 }
-
-data class GeofenceData(
-    val requestId: String,
-    val latitude: Double,
-    val longitude: Double,
-    val radius: Float,
-)
-
-data class LocationData(
-    val latitude: Double, // 緯度
-    val longitude: Double, // 経度
-    val priority: Int,
-)
-
-fun Int.toPriorityString(): String =
-    when (this) {
-        Priority.PRIORITY_BALANCED_POWER_ACCURACY -> "PRIORITY_BALANCED_POWER_ACCURACY"
-        Priority.PRIORITY_HIGH_ACCURACY -> "PRIORITY_HIGH_ACCURACY"
-        Priority.PRIORITY_LOW_POWER -> "PRIORITY_LOW_POWER"
-        else -> "UNKNOWN_PRIORITY"
-    }
