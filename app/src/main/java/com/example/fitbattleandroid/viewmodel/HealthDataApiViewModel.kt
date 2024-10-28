@@ -1,10 +1,10 @@
 package com.example.fitbattleandroid.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.fitbattleandroid.data.EntryGeoFenceRes
-import com.example.fitbattleandroid.data.MemberInfo
-import com.example.fitbattleandroid.data.SaveFitnessReq
-import com.example.fitbattleandroid.model.EntryGeoFenceReq
+import com.example.fitbattleandroid.data.remote.EntryGeoFenceReq
+import com.example.fitbattleandroid.data.remote.EntryGeoFenceRes
+import com.example.fitbattleandroid.data.remote.MemberInfo
+import com.example.fitbattleandroid.data.remote.SaveFitnessReq
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

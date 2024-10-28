@@ -5,10 +5,8 @@ import android.content.BroadcastReceiver
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
-import com.example.fitbattleandroid.data.NewPassingInfo
+import com.example.fitbattleandroid.model.NewPassingInfo
 import com.example.fitbattleandroid.notification.sendGeofenceNotification
 import com.example.fitbattleandroid.repositoryImpl.WebSocketRepositoryImpl
 import com.google.android.gms.location.Geofence
@@ -25,7 +23,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(
         context: Context,
         intent: Intent?,
