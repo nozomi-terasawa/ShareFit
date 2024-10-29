@@ -11,9 +11,6 @@ import kotlinx.coroutines.flow.asStateFlow
 class HealthDataApiViewModel(
     private val repository: GeofenceEntryRepositoryImpl,
 ) : ViewModel() {
-    /*private val _encounterMembers = MutableStateFlow<List<MemberInfo>>(emptyList())
-    val encounterMembers: StateFlow<List<MemberInfo>> = _encounterMembers.asStateFlow()*/
-
     private val _geofenceEntryState = MutableStateFlow<GeofenceEntryState>(GeofenceEntryState.Loading)
     val geofenceEntryState: StateFlow<GeofenceEntryState> = _geofenceEntryState.asStateFlow()
 
@@ -21,9 +18,6 @@ class HealthDataApiViewModel(
     suspend fun sendGeoFenceEntryRequest(entry: EntryGeoFenceReq) {
         try {
             val res = repository.sendGeofenceEntryRequest(entry)
-            /*for (member in res.passingMember) {
-                _encounterMembers.value += member
-            }*/
             _geofenceEntryState.value = GeofenceEntryState.Success(res)
         } catch (e: Exception) {
             _geofenceEntryState.value = GeofenceEntryState.Error
@@ -33,10 +27,8 @@ class HealthDataApiViewModel(
 
 sealed interface GeofenceEntryState {
     data object Loading : GeofenceEntryState
-
     data class Success(
         val entryGeoFenceRes: EntryGeoFenceRes,
     ) : GeofenceEntryState
-
     data object Error : GeofenceEntryState
 }
