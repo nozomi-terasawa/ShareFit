@@ -2,13 +2,11 @@ package com.example.fitbattleandroid.data
 
 import com.example.fitbattleandroid.data.remote.EntryGeoFenceReq
 import com.example.fitbattleandroid.data.remote.EntryGeoFenceRes
-import com.example.fitbattleandroid.data.remote.SaveFitnessReq
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
@@ -38,11 +36,4 @@ class EncounterRemoteDatasource {
         val responseBody = res.body<EntryGeoFenceRes>()
         return responseBody
     }
-
-    // フィットネスデータの保存リクエスト
-    suspend fun sendFitnessSave(request: SaveFitnessReq): HttpResponse =
-        client.post("http://192.168.224.234:7070/api/v1/fitness/save") {
-            contentType(ContentType.Application.Json)
-            setBody(request)
-        }
 }

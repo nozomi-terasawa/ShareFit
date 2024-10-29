@@ -27,8 +27,10 @@ class HealthDataApiViewModel(
 
 sealed interface GeofenceEntryState {
     data object Loading : GeofenceEntryState
+
     data class Success(
         val entryGeoFenceRes: EntryGeoFenceRes,
     ) : GeofenceEntryState
+
     data object Error : GeofenceEntryState
 }
