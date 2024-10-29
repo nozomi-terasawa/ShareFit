@@ -177,11 +177,11 @@ fun MainNavigation(
                 )
             }
             composable(Screen.EncounterList.route) {
-                val encounterHistoryList by dataAPIViewModel.encounterMembers.collectAsState()
+                val geofenceEntryState = dataAPIViewModel.geofenceEntryState.collectAsState().value
+
                 EncounterHistoryScreen(
                     modifier = Modifier,
-                    list = encounterHistoryList,
-                    // encounterHistoryList,
+                    geofenceEntryState = geofenceEntryState,
                 )
             }
         }

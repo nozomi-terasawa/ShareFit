@@ -36,11 +36,12 @@ import com.example.fitbattleandroid.ui.theme.inversePrimaryLight
 import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
 import com.example.fitbattleandroid.ui.theme.primaryContainerLight
+import com.example.fitbattleandroid.viewmodel.GeofenceEntryState
 
 @Composable
 fun EncounterHistoryScreen(
     modifier: Modifier,
-    list: List<MemberInfo> = emptyList(),
+    geofenceEntryState: GeofenceEntryState,
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -72,24 +73,46 @@ fun EncounterHistoryScreen(
             modifier = modifier,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                text = "今日であったユーザー",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(20.dp),
-                color = onPrimaryDark,
-            )
+            when (geofenceEntryState) {
+                is GeofenceEntryState.Loading -> {
+                    Text(
+                        text = "Loading...",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(20.dp),
+                        color = onPrimaryDark,
+                    )
+                }
+                is GeofenceEntryState.Success -> {
+                    Text(
+                        text = "今日であったユーザー",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(20.dp),
+                        color = onPrimaryDark,
+                    )
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                items(
-                    items = list,
-                    key = { encounterUser -> encounterUser.id },
-                ) { encounterUser ->
-                    EncounterHistoryItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        encounterUser = encounterUser,
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        items(
+                            items = geofenceEntryState.entryGeoFenceRes.passingMember,
+                            key = { encounterUser -> encounterUser.id },
+                        ) { encounterUser ->
+                            EncounterHistoryItem(
+                                modifier = Modifier.fillMaxWidth(),
+                                encounterUser = encounterUser,
+                            )
+                        }
+                    }
+                }
+                is GeofenceEntryState.Error -> {
+                    Text(
+                        text = "Error",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(20.dp),
+                        color = onPrimaryDark,
                     )
                 }
             }
