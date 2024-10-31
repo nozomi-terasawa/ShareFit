@@ -1,11 +1,7 @@
 package com.example.fitbattleandroid.extensions
 
-import com.google.android.gms.location.Priority
+fun String.isEmailValid(): Boolean {
+    val emailRegex = "^[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
 
-fun Int.toPriorityString(): String =
-    when (this) {
-        Priority.PRIORITY_BALANCED_POWER_ACCURACY -> "PRIORITY_BALANCED_POWER_ACCURACY"
-        Priority.PRIORITY_HIGH_ACCURACY -> "PRIORITY_HIGH_ACCURACY"
-        Priority.PRIORITY_LOW_POWER -> "PRIORITY_LOW_POWER"
-        else -> "UNKNOWN_PRIORITY"
-    }
+    return emailRegex.matches(this)
+}

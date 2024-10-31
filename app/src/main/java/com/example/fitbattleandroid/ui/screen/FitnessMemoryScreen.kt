@@ -36,6 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.health.connect.client.HealthConnectClient
+import com.example.fitbattleandroid.data.FitnessRemoteDataSource
+import com.example.fitbattleandroid.repositoryImpl.SaveFitnessRepositoryImpl
 import com.example.fitbattleandroid.ui.common.ShowCurrentTimeAndRemainingTime
 import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
@@ -295,6 +297,10 @@ fun FitnessMemoryPreview() {
     FitnessMemory(
         modifier = Modifier,
         healthConnectClient = HealthConnectClient.getOrCreate(context),
-        calorieViewModel = HealthConnectViewModel(),
+        calorieViewModel = HealthConnectViewModel(
+            SaveFitnessRepositoryImpl(
+                FitnessRemoteDataSource(),
+            ),
+        ),
     )
 }
