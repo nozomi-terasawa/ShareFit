@@ -31,6 +31,8 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle-
 
       - name: Lint check
+        env:
+          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
         run: ./gradlew lint
 
       - name: Build
