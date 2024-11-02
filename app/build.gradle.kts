@@ -1,3 +1,20 @@
+import java.util.Properties
+
+val properties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+
+if (!localPropertiesFile.exists()) {
+    localPropertiesFile.createNewFile()
+    properties.setProperty("MAPS_API_KEY", System.getenv("MAPS_API_KEY"))
+    localPropertiesFile.writer().use { writer ->
+        properties.store(writer, null)
+    }
+} else {
+    localPropertiesFile.inputStream().use { inputStream ->
+        properties.load(inputStream)
+    }
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
