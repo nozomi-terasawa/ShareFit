@@ -5,7 +5,9 @@ val localPropertiesFile = rootProject.file("local.properties")
 
 if (!localPropertiesFile.exists()) {
     localPropertiesFile.createNewFile()
-    properties.setProperty("MAPS_API_KEY", System.getenv("MAPS_API_KEY")) ?: error("MAPS_API_KEY is not set")
+
+    val mapsApiKey = System.getenv("MAPS_API_KEY") ?: error("MAPS_API_KEY is not set")
+    properties.setProperty("MAPS_API_KEY", mapsApiKey)
     localPropertiesFile.writer().use { writer ->
         properties.store(writer, null)
     }
