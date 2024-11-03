@@ -29,6 +29,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.data.EncounterRemoteDatasource
 import com.example.fitbattleandroid.data.FitnessRemoteDataSource
+import com.example.fitbattleandroid.repositoryImpl.AuthRepositoryImpl
 import com.example.fitbattleandroid.repositoryImpl.GeofenceEntryRepositoryImpl
 import com.example.fitbattleandroid.repositoryImpl.SaveFitnessRepositoryImpl
 import com.example.fitbattleandroid.ui.screen.EncounterHistoryScreen
@@ -37,6 +38,7 @@ import com.example.fitbattleandroid.ui.screen.LoginScreen
 import com.example.fitbattleandroid.ui.screen.MapScreen
 import com.example.fitbattleandroid.ui.screen.RegistrationScreen
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
+import com.example.fitbattleandroid.viewmodel.AuthViewModel
 import com.example.fitbattleandroid.viewmodel.HealthConnectViewModel
 import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
 import com.example.fitbattleandroid.viewmodel.MapViewModel
@@ -81,8 +83,18 @@ fun App(
         startDestination = Screen.Top.route,
     ) {
         composable(Screen.Top.route) { TopScreen(navController) }
-        composable(Screen.Login.route) { LoginScreen(navController) }
-        composable(Screen.Regi.route) { RegistrationScreen(navController) }
+        composable(Screen.Login.route) {
+            LoginScreen(
+                navController,
+                authViewModel = viewModel { AuthViewModel(AuthRepositoryImpl()) },
+            )
+        }
+        composable(Screen.Regi.route) {
+            RegistrationScreen(
+                navController,
+                authViewModel = viewModel { AuthViewModel(AuthRepositoryImpl()) },
+            )
+        }
         composable("main") {
             MainNavigation(
                 requestPermissionLauncher,

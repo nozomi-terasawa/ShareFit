@@ -5,18 +5,49 @@ import com.example.fitbattleandroid.extensions.isEmailValid
 import com.example.fitbattleandroid.repositoryImpl.AuthRepositoryImpl
 
 class AuthViewModel(
-    private val authRepository: AuthRepositoryImpl
+    private val authRepository: AuthRepositoryImpl,
+) : ViewModel() {
+    private var _registerState = mutableStateOf(RegisterState("", "", ""))
+    val registerState: RegisterState
+        get() = _registerState.value
 
-): ViewModel() {
-    fun isEmailValid(email: String): Boolean {
-        return email.isEmailValid()
+    private var _loginState = mutableStateOf(LoginState("", ""))
+    val loginState: LoginState
+        get() = _loginState.value
+
+    fun updateRegisterTextField(
+        field: String,
+        newText: String,
+    ) {
+        when (field) {
+            "email" -> _registerState.value = _registerState.value.copy(email = newText)
+            "password" -> _registerState.value = _registerState.value.copy(password = newText)
+            "userName" -> _registerState.value = _registerState.value.copy(userName = newText)
+        }
     }
 
-    suspend fun register(email: String, password: String) {
-        authRepository.register(email, password)
+    fun updateLoginTextField(
+        field: String,
+        newText: String,
+    ) {
+        when (field) {
+            "email" -> _loginState.value = _loginState.value.copy(email = newText)
+            "password" -> _loginState.value = _loginState.value.copy(password = newText)
+        }
     }
 
     suspend fun login(email: String, password: String) {
         authRepository.login(email, password)
     }
 }
+
+data class RegisterState(
+    val email: String,
+    val password: String,
+    val userName: String,
+)
+
+data class LoginState(
+    val email: String,
+    val password: String,
+)

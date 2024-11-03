@@ -4,14 +4,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.fitbattleandroid.repositoryImpl.AuthRepositoryImpl
 import com.example.fitbattleandroid.ui.common.Background
 import com.example.fitbattleandroid.ui.common.Body
 import com.example.fitbattleandroid.ui.common.CommonOutlinedTextField
@@ -22,11 +21,14 @@ import com.example.fitbattleandroid.ui.common.NormalText
 import com.example.fitbattleandroid.ui.common.TitleText
 import com.example.fitbattleandroid.ui.common.TransparentBottom
 import com.example.fitbattleandroid.ui.navigation.Screen
+import com.example.fitbattleandroid.viewmodel.AuthViewModel
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun LoginScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel,
+) {
+    val loginState = authViewModel.loginState
 
     Background {
         Header {
@@ -36,15 +38,19 @@ fun LoginScreen(navController: NavController) {
                 Spacer(modifier = Modifier.size(50.dp))
 
                 CommonOutlinedTextField(
-                    value = email,
+                    value = loginState.email,
                     label = "メールアドレス",
-                    onValueChange = { email = it },
+                    onValueChange = { newValue ->
+                        authViewModel.updateLoginTextField("email", newValue)
+                    },
                 )
 
                 CommonOutlinedTextField(
-                    value = password,
+                    value = loginState.password,
                     label = "パスワード",
-                    onValueChange = { password = it },
+                    onValueChange = { newValue ->
+                        authViewModel.updateLoginTextField("password", newValue)
+                    },
                 )
 
                 NormalBottom({ navController.navigate("main") }) {
@@ -69,5 +75,8 @@ fun LoginScreen(navController: NavController) {
 @Composable
 @Preview
 fun LoginScreenPreview() {
-    LoginScreen(navController = rememberNavController())
+    LoginScreen(
+        navController = rememberNavController(),
+        authViewModel = AuthViewModel(AuthRepositoryImpl()),
+    )
 }
