@@ -15,5 +15,5 @@
 # 📷スクリーンショット
 | 導入画面 | マップと<br>ジオフェンス内での通信 | ジオフェンス内で<br>通信したユーザー一覧 | 自身のフィットネスデータ |
 |-|-|-|-|
-| <img src="https://github.com/user-attachments/assets/e1659968-0715-476c-98ea-19affffe0680" width = "300" /> | <img src="https://github.com/user-attachments/assets/3e048e05-b827-4afd-975b-1dde5ce9adfb" width="300" /> |　<img src="https://github.com/user-attachments/assets/c048ad3a-c3a8-439a-b586-1f817f799d15" width="300" /> | <img src="https://github.com/user-attachments/assets/e4747a0c-ab0d-4734-acd7-5ab9c3b77c4d" width="300" />
-|新規登録かログインを選択|ジオフェンスエントリ時に<br>他のユーザーと通信開始|ユーザー情報の一覧|自身の消費カロリー|
+| <img src="https://github.com/user-attachments/assets/e1659968-0715-476c-98ea-19affffe0680" width = "300" /> | <img src="https://github.com/user-attachments/assets/3e048e05-b827-4afd-975b-1dde5ce9adfb" width="300" /> |<img src="https://github.com/user-attachments/assets/c048ad3a-c3a8-439a-b586-1f817f799d15" width="300" /> | <img src="https://github.com/user-attachments/assets/e4747a0c-ab0d-4734-acd7-5ab9c3b77c4d" width="300" />
+|新規登録かログインを選択|ジオフェンスエントリ時<br>に他のユーザーと通信開始|ユーザー情報の一覧|自身の消費カロリー|
