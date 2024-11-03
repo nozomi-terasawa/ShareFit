@@ -3,8 +3,11 @@ package com.example.fitbattleandroid.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EntryGeoFenceReq(
+data class NewPassingInfo(
     val userId: Int,
     val geoFenceId: Int,
-    val entryTime: String,
+    val message: String,
+    val passedUserId: Int,
+    val passedUserName: String,
+    val timestamp: String,
 )

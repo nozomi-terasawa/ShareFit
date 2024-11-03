@@ -1,19 +1,16 @@
 package com.example.fitbattleandroid.ui.common
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 
 @Composable
-fun NormalText(text:String){
+fun NormalText(text: String) {
     Column {
         Text(
             text = text,
@@ -23,18 +20,18 @@ fun NormalText(text:String){
 }
 
 @Composable
-fun MinText(text:String){
+fun MinText(text: String) {
     Column {
         Text(
             text = text,
             fontSize = 10.sp,
-            color = onPrimaryDark
+            color = onPrimaryDark,
         )
     }
 }
 
 @Composable
-fun TitleText(text: String){
+fun TitleText(text: String) {
     Column {
         Text(
             text = text,
@@ -46,7 +43,7 @@ fun TitleText(text: String){
 
 @Composable
 @Preview
-fun NormalTextPreview(){
+fun NormalTextPreview() {
     NormalText("Hello")
     MinText("Hello")
 }

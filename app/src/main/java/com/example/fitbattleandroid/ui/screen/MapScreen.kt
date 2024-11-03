@@ -30,16 +30,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.fitbattleandroid.model.EntryGeoFenceReq
+import com.example.fitbattleandroid.data.remote.EntryGeoFenceReq
+import com.example.fitbattleandroid.model.LocationData
 import com.example.fitbattleandroid.ui.permissioncheck.LocationPermissionRequest
 import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
-import com.example.fitbattleandroid.ui.theme.primaryContainerLight
-import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
 import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
-import com.example.fitbattleandroid.viewmodel.LocationData
-import com.example.fitbattleandroid.viewmodel.LocationViewModel
+import com.example.fitbattleandroid.viewmodel.MapViewModel
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -57,13 +54,12 @@ import kotlinx.coroutines.launch
 fun MapScreen(
     modifier: Modifier,
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
-    locationViewModel: LocationViewModel,
-    geofenceViewModel: GeofencingClientViewModel = viewModel(),
+    mapViewModel: MapViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
     healthDataApiViewModel: HealthDataApiViewModel,
 ) {
-    val locationData = locationViewModel.location.collectAsState().value
-    val geofenceList = geofenceViewModel.geofenceList
+    val locationData = mapViewModel.location.collectAsState().value
+    val geofenceList = mapViewModel.geofenceList
     val scope = rememberCoroutineScope()
     val currentLocation = remember { mutableStateOf(locationData) }
     val permissionGranted = remember { mutableStateOf(false) }
@@ -71,7 +67,7 @@ fun MapScreen(
     if (permissionGranted.value) {
         LaunchedEffect(Unit) {
             scope.launch(Dispatchers.IO) {
-                currentLocation.value = locationViewModel.fetchLocation()
+                currentLocation.value = mapViewModel.fetchLocation()
             }
         }
     }
@@ -88,12 +84,12 @@ fun MapScreen(
             requestPermissionLauncher = requestPermissionLauncher,
             fetchLocation = {
                 scope.launch(Dispatchers.IO) {
-                    locationViewModel.fetchLocation()
+                    mapViewModel.fetchLocation()
                 }
             },
             updatePriority = { priority ->
-                locationViewModel.updatePriority(priority)
-                locationViewModel.createLocationRequest()
+                mapViewModel.updatePriority(priority)
+                mapViewModel.updateLocationRequest()
             },
             onPermissionGranted = { boolean ->
                 permissionGranted.value = boolean
@@ -118,72 +114,45 @@ fun MapScreen(
                     ),
             )
         }
-
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier =
-                Modifier
-                    .background(primaryContainerLight)
-                    .fillMaxSize(),
-        ) {
-            LocationPermissionRequest(
-                requestPermissionLauncher = requestPermissionLauncher,
-                fetchLocation = {
+        Button(
+            onClick = {
+                if (backgroundPermissionGranted.value) {
+                    mapViewModel.addGeofence()
+                    mapViewModel.registerGeofence()
                     scope.launch(Dispatchers.IO) {
-                        locationViewModel.fetchLocation()
+                        val response =
+                            healthDataApiViewModel.sendGeoFenceEntryRequest(
+                                EntryGeoFenceReq(
+                                    userId = 12,
+                                    geoFenceId = 2,
+                                    entryTime = "2021-10-01T10:00:00.391Z",
+                                ),
+                            )
                     }
-                },
-                updatePriority = { priority ->
-                    locationViewModel.updatePriority(priority)
-                    locationViewModel.createLocationRequest()
-                },
-                onPermissionGranted = { boolean ->
-                    permissionGranted.value = boolean
-                },
-                backgroundPermissionGranted = backgroundPermissionGranted,
-            )
-
-            Button(
-                onClick = {
-                    if (backgroundPermissionGranted.value) {
-                        geofenceViewModel.addGeofence()
-                        geofenceViewModel.registerGeofence()
-                        scope.launch(Dispatchers.IO) {
-                            val response =
-                                healthDataApiViewModel.sendGeoFenceEntryRequest(
-                                    EntryGeoFenceReq(
-                                        userId = 12,
-                                        geoFenceId = 2,
-                                        entryTime = "2021-10-01T10:00:00.391Z",
-                                    ),
-                                )
-                        }
-                    }
-                },
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = primaryContainerDarkMediumContrast,
-                    ),
-            ) {
-                Text(
-                    text = "ジオフェンスを追加",
-                    color = onPrimaryDark,
-                )
-            }
-
-            ShowMap(
-                modifier = Modifier.fillMaxSize(),
-                locationData =
-                    LocationData(
-                        currentLocation.value.latitude,
-                        currentLocation.value.longitude,
-                        0,
-                    ),
-                geofenceList = geofenceList.toList(),
-                permissionState = permissionGranted.value,
+                }
+            },
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = primaryContainerDarkMediumContrast,
+                ),
+        ) {
+            Text(
+                text = "ジオフェンスを追加",
+                color = onPrimaryDark,
             )
         }
+
+        ShowMap(
+            modifier = Modifier.fillMaxSize(),
+            locationData =
+                LocationData(
+                    currentLocation.value.latitude,
+                    currentLocation.value.longitude,
+                    0,
+                ),
+            geofenceList = geofenceList.toList(),
+            permissionState = permissionGranted.value,
+        )
     }
 }
 
