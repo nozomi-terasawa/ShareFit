@@ -1,5 +1,6 @@
 package com.example.fitbattleandroid.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.fitbattleandroid.extensions.isEmailValid
 import com.example.fitbattleandroid.repositoryImpl.AuthRepositoryImpl
@@ -36,7 +37,16 @@ class AuthViewModel(
         }
     }
 
-    suspend fun login(email: String, password: String) {
+    fun isEmailValid(email: String): Boolean = email.isEmailValid()
+
+    suspend fun register() {
+        authRepository.register(_registerState.value.email, _registerState.value.password)
+    }
+
+    suspend fun login(
+        email: String,
+        password: String,
+    ) {
         authRepository.login(email, password)
     }
 }

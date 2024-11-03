@@ -187,11 +187,12 @@ fun MainNavigation(
                 FitnessMemory(
                     modifier = Modifier,
                     healthConnectClient,
-                    calorieViewModel = HealthConnectViewModel(
-                        SaveFitnessRepositoryImpl(
-                            FitnessRemoteDataSource()
-                        )
-                    ),
+                    calorieViewModel =
+                        HealthConnectViewModel(
+                            SaveFitnessRepositoryImpl(
+                                FitnessRemoteDataSource(),
+                            ),
+                        ),
                 )
             }
             composable(Screen.EncounterList.route) {
