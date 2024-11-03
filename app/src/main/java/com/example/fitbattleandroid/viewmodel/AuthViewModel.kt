@@ -2,11 +2,14 @@ package com.example.fitbattleandroid.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.fitbattleandroid.data.remote.auth.UserCreateReq
 import com.example.fitbattleandroid.extensions.isEmailValid
-import com.example.fitbattleandroid.repositoryImpl.AuthRepositoryImpl
+import com.example.fitbattleandroid.repository.AuthRepository
+import kotlinx.coroutines.launch
 
 class AuthViewModel(
-    private val authRepository: AuthRepositoryImpl,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     private var _registerState = mutableStateOf(RegisterState("", "", ""))
     val registerState: RegisterState
@@ -39,8 +42,10 @@ class AuthViewModel(
 
     fun isEmailValid(email: String): Boolean = email.isEmailValid()
 
-    suspend fun register() {
-        authRepository.register(_registerState.value.email, _registerState.value.password)
+    fun register(userCreateReq: UserCreateReq) {
+        viewModelScope.launch {
+            authRepository.register(userCreateReq)
+        }
     }
 
     suspend fun login(
@@ -56,6 +61,13 @@ data class RegisterState(
     val password: String,
     val userName: String,
 )
+
+fun RegisterState.toUserCreateReq(): UserCreateReq =
+    UserCreateReq(
+        email = email,
+        password = password,
+        name = userName,
+    )
 
 data class LoginState(
     val email: String,
