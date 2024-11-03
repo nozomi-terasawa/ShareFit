@@ -1,5 +1,5 @@
 # Share Fit
-※開発ブランチはdevelop-main
+※開発ブランチは`develop-main`
 
 ## 開発背景
 ### 問題
