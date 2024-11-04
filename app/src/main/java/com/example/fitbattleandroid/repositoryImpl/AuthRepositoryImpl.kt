@@ -2,6 +2,8 @@ package com.example.fitbattleandroid.repositoryImpl
 
 import com.example.fitbattleandroid.data.remote.auth.UserCreateReq
 import com.example.fitbattleandroid.data.remote.auth.UserCreateRes
+import com.example.fitbattleandroid.data.remote.auth.UserLoginReq
+import com.example.fitbattleandroid.data.remote.auth.UserLoginRes
 import com.example.fitbattleandroid.repository.AuthRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -37,9 +39,13 @@ class AuthRepositoryImpl : AuthRepository {
         return responseBody
     }
 
-    override suspend fun login(
-        email: String,
-        password: String,
-    ) {
+    override suspend fun login(userLoginReq: UserLoginReq): UserLoginRes {
+        val res =
+            client.post("http://192.168.11.3:7070/api/v1/user/login") {
+                contentType(ContentType.Application.Json)
+                setBody(userLoginReq)
+            }
+        val responseBody = res.body<UserLoginRes>()
+        return responseBody
     }
 }

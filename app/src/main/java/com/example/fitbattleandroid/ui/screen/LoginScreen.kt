@@ -21,12 +21,15 @@ import com.example.fitbattleandroid.ui.common.NormalText
 import com.example.fitbattleandroid.ui.common.TitleText
 import com.example.fitbattleandroid.ui.common.TransparentBottom
 import com.example.fitbattleandroid.ui.navigation.Screen
+import com.example.fitbattleandroid.viewmodel.AuthState
 import com.example.fitbattleandroid.viewmodel.AuthViewModel
+import com.example.fitbattleandroid.viewmodel.toUserLoginReq
 
 @Composable
 fun LoginScreen(
     navController: NavController,
     authViewModel: AuthViewModel,
+    authState: AuthState,
 ) {
     val loginState = authViewModel.loginState
 
@@ -53,7 +56,20 @@ fun LoginScreen(
                     },
                 )
 
-                NormalBottom({ navController.navigate("main") }) {
+                NormalBottom(
+                    onClick = {
+                        authViewModel.login(authViewModel.loginState.toUserLoginReq())
+                    },
+                ) {
+                    when (authState) {
+                        is AuthState.Loading -> { }
+                        is AuthState.Success -> {
+                            navController.navigate("main")
+                        }
+                        is AuthState.Error -> {
+                        }
+                        else -> {}
+                    }
                     NormalText("ログイン")
                 }
 
@@ -78,5 +94,6 @@ fun LoginScreenPreview() {
     LoginScreen(
         navController = rememberNavController(),
         authViewModel = AuthViewModel(AuthRepositoryImpl()),
+        authState = AuthState.Loading,
     )
 }

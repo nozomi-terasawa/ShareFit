@@ -4,8 +4,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fitbattleandroid.data.remote.auth.UserCreateReq
+import com.example.fitbattleandroid.data.remote.auth.UserLoginReq
 import com.example.fitbattleandroid.extensions.isEmailValid
 import com.example.fitbattleandroid.repository.AuthRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
@@ -18,6 +22,9 @@ class AuthViewModel(
     private var _loginState = mutableStateOf(LoginState("", ""))
     val loginState: LoginState
         get() = _loginState.value
+
+    private var _authState = MutableStateFlow<AuthState>(AuthState.Initial)
+    val authState: StateFlow<AuthState> = _authState.asStateFlow()
 
     fun updateRegisterTextField(
         field: String,
@@ -48,11 +55,16 @@ class AuthViewModel(
         }
     }
 
-    suspend fun login(
-        email: String,
-        password: String,
-    ) {
-        authRepository.login(email, password)
+    fun login(userLoginReq: UserLoginReq) {
+        _authState.value = AuthState.Loading
+        try {
+            viewModelScope.launch {
+                authRepository.login(userLoginReq)
+                _authState.value = AuthState.Success
+            }
+        } catch (e: Exception) {
+            _authState.value = AuthState.Error
+        }
     }
 }
 
@@ -73,3 +85,19 @@ data class LoginState(
     val email: String,
     val password: String,
 )
+
+fun LoginState.toUserLoginReq(): UserLoginReq =
+    UserLoginReq(
+        email = email,
+        password = password,
+    )
+
+sealed interface AuthState {
+    data object Initial : AuthState
+
+    data object Loading : AuthState
+
+    data object Success : AuthState
+
+    data object Error : AuthState
+}

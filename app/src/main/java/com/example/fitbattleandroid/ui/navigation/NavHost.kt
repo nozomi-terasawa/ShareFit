@@ -84,9 +84,11 @@ fun App(
     ) {
         composable(Screen.Top.route) { TopScreen(navController) }
         composable(Screen.Login.route) {
+            val authViewModel = viewModel { AuthViewModel(AuthRepositoryImpl()) }
             LoginScreen(
                 navController,
-                authViewModel = viewModel { AuthViewModel(AuthRepositoryImpl()) },
+                authViewModel = authViewModel,
+                authState = authViewModel.authState.collectAsState().value,
             )
         }
         composable(Screen.Regi.route) {
