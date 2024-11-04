@@ -1,5 +1,6 @@
 package com.example.fitbattleandroid.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -64,6 +65,7 @@ fun LoginScreen(
                     when (authState) {
                         is AuthState.Loading -> { }
                         is AuthState.Success -> {
+                            Log.d("result", authState.token)
                             navController.navigate("main")
                         }
                         is AuthState.Error -> {

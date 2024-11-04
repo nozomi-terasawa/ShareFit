@@ -1,5 +1,6 @@
 package com.example.fitbattleandroid.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -51,19 +52,29 @@ class AuthViewModel(
 
     fun register(userCreateReq: UserCreateReq) {
         viewModelScope.launch {
-            authRepository.register(userCreateReq)
+            try {
+                authRepository.register(userCreateReq)
+            } catch (e: Exception) {
+                Log.d("result", e.toString())
+            }
         }
     }
 
     fun login(userLoginReq: UserLoginReq) {
         _authState.value = AuthState.Loading
-        try {
-            viewModelScope.launch {
-                authRepository.login(userLoginReq)
-                _authState.value = AuthState.Success
+        viewModelScope.launch {
+            try {
+                val result = authRepository.login(userLoginReq)
+                _authState.value =
+                    AuthState.Success(
+                        token = result.token,
+                        userId = result.userId,
+                    )
+            } catch (e: Exception) {
+                Log.d("result", e.toString())
+
+                _authState.value = AuthState.Error
             }
-        } catch (e: Exception) {
-            _authState.value = AuthState.Error
         }
     }
 }
@@ -97,7 +108,10 @@ sealed interface AuthState {
 
     data object Loading : AuthState
 
-    data object Success : AuthState
+    data class Success(
+        val token: String,
+        val userId: Int,
+    ) : AuthState
 
     data object Error : AuthState
 }
