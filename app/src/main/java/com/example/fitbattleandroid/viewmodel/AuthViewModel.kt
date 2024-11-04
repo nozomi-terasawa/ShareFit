@@ -1,9 +1,11 @@
 package com.example.fitbattleandroid.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fitbattleandroid.data.datastore.DataStoreManager
 import com.example.fitbattleandroid.data.remote.auth.UserCreateReq
 import com.example.fitbattleandroid.data.remote.auth.UserLoginReq
 import com.example.fitbattleandroid.extensions.isEmailValid
@@ -80,6 +82,23 @@ class AuthViewModel(
 
                 _authState.value = AuthState.Error
             }
+        }
+    }
+
+    // トークンの保存
+    fun saveAuthToken(
+        context: Context,
+        token: String,
+    ) {
+        viewModelScope.launch {
+            DataStoreManager.saveAuthToken(context, token)
+        }
+    }
+
+    // トークンを取得
+    fun getAuthToken(context: Context) {
+        viewModelScope.launch {
+            DataStoreManager.getAuthToken(context)
         }
     }
 }

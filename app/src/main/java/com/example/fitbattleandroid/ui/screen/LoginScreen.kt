@@ -1,12 +1,12 @@
 package com.example.fitbattleandroid.ui.screen
 
-import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -33,6 +33,7 @@ fun LoginScreen(
     authState: AuthState,
 ) {
     val loginState = authViewModel.loginState
+    val context = LocalContext.current
 
     Background {
         Header {
@@ -63,7 +64,10 @@ fun LoginScreen(
                         when (authState) {
                             is AuthState.Loading -> { }
                             is AuthState.Success -> {
-                                Log.d("result", authState.token)
+                                authViewModel.saveAuthToken(
+                                    context,
+                                    authState.token,
+                                )
                                 navController.navigate("main")
                             }
                             is AuthState.Error -> {

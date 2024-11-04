@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -31,6 +32,7 @@ fun RegistrationScreen(
     modifier: Modifier = Modifier,
 ) {
     val registerState = authViewModel.registerState
+    val context = LocalContext.current
 
     Background {
         Header {
@@ -71,10 +73,10 @@ fun RegistrationScreen(
                         when (authState) {
                             is AuthState.Success -> {
                                 navController.navigate("main")
-                                /*
-                                authState.token
-                                authState.userId
-                                 */
+                                authViewModel.saveAuthToken(
+                                    context,
+                                    authState.token,
+                                )
                             }
                             else -> return@NormalBottom
                         }
