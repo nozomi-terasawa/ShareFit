@@ -60,18 +60,18 @@ fun LoginScreen(
                 NormalBottom(
                     onClick = {
                         authViewModel.login(authViewModel.loginState.toUserLoginReq())
+                        when (authState) {
+                            is AuthState.Loading -> { }
+                            is AuthState.Success -> {
+                                Log.d("result", authState.token)
+                                navController.navigate("main")
+                            }
+                            is AuthState.Error -> {
+                            }
+                            else -> {}
+                        }
                     },
                 ) {
-                    when (authState) {
-                        is AuthState.Loading -> { }
-                        is AuthState.Success -> {
-                            Log.d("result", authState.token)
-                            navController.navigate("main")
-                        }
-                        is AuthState.Error -> {
-                        }
-                        else -> {}
-                    }
                     NormalText("ログイン")
                 }
 

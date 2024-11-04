@@ -76,25 +76,28 @@ fun App(
     mapViewModel: MapViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
     healthConnectClient: HealthConnectClient,
+    authViewModel: AuthViewModel = AuthViewModel(AuthRepositoryImpl()),
 ) {
     val navController = rememberNavController()
+    val authState = authViewModel.authState.collectAsState().value
+
     NavHost(
         navController,
         startDestination = Screen.Top.route,
     ) {
         composable(Screen.Top.route) { TopScreen(navController) }
         composable(Screen.Login.route) {
-            val authViewModel = viewModel { AuthViewModel(AuthRepositoryImpl()) }
             LoginScreen(
                 navController,
                 authViewModel = authViewModel,
-                authState = authViewModel.authState.collectAsState().value,
+                authState = authState,
             )
         }
         composable(Screen.Regi.route) {
             RegistrationScreen(
                 navController,
-                authViewModel = viewModel { AuthViewModel(AuthRepositoryImpl()) },
+                authViewModel = authViewModel,
+                authState = authState,
             )
         }
         composable("main") {

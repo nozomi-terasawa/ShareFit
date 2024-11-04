@@ -19,6 +19,7 @@ import com.example.fitbattleandroid.ui.common.NormalText
 import com.example.fitbattleandroid.ui.common.TitleText
 import com.example.fitbattleandroid.ui.common.TransparentBottom
 import com.example.fitbattleandroid.ui.navigation.Screen
+import com.example.fitbattleandroid.viewmodel.AuthState
 import com.example.fitbattleandroid.viewmodel.AuthViewModel
 import com.example.fitbattleandroid.viewmodel.toUserCreateReq
 
@@ -26,6 +27,7 @@ import com.example.fitbattleandroid.viewmodel.toUserCreateReq
 fun RegistrationScreen(
     navController: NavController,
     authViewModel: AuthViewModel,
+    authState: AuthState,
     modifier: Modifier = Modifier,
 ) {
     val registerState = authViewModel.registerState
@@ -66,7 +68,16 @@ fun RegistrationScreen(
                         authViewModel.register(
                             userCreateReq = registerState.toUserCreateReq(),
                         )
-                        navController.navigate("main")
+                        when (authState) {
+                            is AuthState.Success -> {
+                                navController.navigate("main")
+                                /*
+                                authState.token
+                                authState.userId
+                                 */
+                            }
+                            else -> return@NormalBottom
+                        }
                     },
                 ) {
                     NormalText("新規登録")
@@ -93,6 +104,7 @@ fun RegistrationScreenPreview(modifier: Modifier = Modifier) {
     RegistrationScreen(
         navController = rememberNavController(),
         authViewModel = AuthViewModel(AuthRepositoryImpl()),
+        authState = AuthState.Loading,
         modifier = modifier,
     )
 }

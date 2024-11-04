@@ -53,8 +53,13 @@ class AuthViewModel(
     fun register(userCreateReq: UserCreateReq) {
         viewModelScope.launch {
             try {
-                authRepository.register(userCreateReq)
+                val result = authRepository.register(userCreateReq)
+                AuthState.Success(
+                    token = result.token,
+                    userId = result.userId,
+                )
             } catch (e: Exception) {
+                AuthState.Error
                 Log.d("result", e.toString())
             }
         }
