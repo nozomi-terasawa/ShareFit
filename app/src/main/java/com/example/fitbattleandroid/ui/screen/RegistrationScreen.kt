@@ -20,6 +20,7 @@ import com.example.fitbattleandroid.ui.common.TitleText
 import com.example.fitbattleandroid.ui.common.TransparentBottom
 import com.example.fitbattleandroid.ui.navigation.Screen
 import com.example.fitbattleandroid.viewmodel.AuthViewModel
+import com.example.fitbattleandroid.viewmodel.toUserCreateReq
 
 @Composable
 fun RegistrationScreen(
@@ -61,7 +62,12 @@ fun RegistrationScreen(
                 )
 
                 NormalBottom(
-                    onClick = { navController.navigate("main") },
+                    onClick = {
+                        authViewModel.register(
+                            userCreateReq = registerState.toUserCreateReq(),
+                        )
+                        navController.navigate("main")
+                    },
                 ) {
                     NormalText("新規登録")
                 }
