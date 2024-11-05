@@ -89,6 +89,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
     implementation("androidx.health.connect:connect-client:1.1.0-alpha07")
 
+    implementation("androidx.fragment:fragment:1.8.3")
+
     implementation(libs.ktor.core)
     implementation(libs.ktor.cio)
     implementation(libs.ktor.content.negotiation)
