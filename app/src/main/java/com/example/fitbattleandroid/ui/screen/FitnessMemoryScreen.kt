@@ -297,10 +297,11 @@ fun FitnessMemoryPreview() {
     FitnessMemory(
         modifier = Modifier,
         healthConnectClient = HealthConnectClient.getOrCreate(context),
-        calorieViewModel = HealthConnectViewModel(
-            SaveFitnessRepositoryImpl(
-                FitnessRemoteDataSource(),
+        calorieViewModel =
+            HealthConnectViewModel(
+                SaveFitnessRepositoryImpl(
+                    FitnessRemoteDataSource(),
+                ),
             ),
-        ),
     )
 }

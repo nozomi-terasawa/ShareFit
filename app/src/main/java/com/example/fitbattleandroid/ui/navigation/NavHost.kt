@@ -1,5 +1,6 @@
 package com.example.fitbattleandroid.ui.navigation
 
+import android.app.Application
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
@@ -19,6 +20,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.health.connect.client.HealthConnectClient
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -29,6 +31,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.data.EncounterRemoteDatasource
 import com.example.fitbattleandroid.data.FitnessRemoteDataSource
+import com.example.fitbattleandroid.repositoryImpl.AuthRepositoryImpl
 import com.example.fitbattleandroid.repositoryImpl.GeofenceEntryRepositoryImpl
 import com.example.fitbattleandroid.repositoryImpl.SaveFitnessRepositoryImpl
 import com.example.fitbattleandroid.ui.screen.EncounterHistoryScreen
@@ -37,6 +40,7 @@ import com.example.fitbattleandroid.ui.screen.LoginScreen
 import com.example.fitbattleandroid.ui.screen.MapScreen
 import com.example.fitbattleandroid.ui.screen.RegistrationScreen
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
+import com.example.fitbattleandroid.viewmodel.AuthViewModel
 import com.example.fitbattleandroid.viewmodel.HealthConnectViewModel
 import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
 import com.example.fitbattleandroid.viewmodel.MapViewModel
@@ -74,15 +78,28 @@ fun App(
     mapViewModel: MapViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
     healthConnectClient: HealthConnectClient,
+    context: Application = LocalContext.current.applicationContext as Application,
+    authViewModel: AuthViewModel = AuthViewModel(context, AuthRepositoryImpl()),
 ) {
     val navController = rememberNavController()
+
     NavHost(
         navController,
         startDestination = Screen.Top.route,
     ) {
         composable(Screen.Top.route) { TopScreen(navController) }
-        composable(Screen.Login.route) { LoginScreen(navController) }
-        composable(Screen.Regi.route) { RegistrationScreen(navController) }
+        composable(Screen.Login.route) {
+            LoginScreen(
+                navController,
+                authViewModel = authViewModel,
+            )
+        }
+        composable(Screen.Regi.route) {
+            RegistrationScreen(
+                navController,
+                authViewModel = authViewModel,
+            )
+        }
         composable("main") {
             MainNavigation(
                 requestPermissionLauncher,
@@ -175,11 +192,12 @@ fun MainNavigation(
                 FitnessMemory(
                     modifier = Modifier,
                     healthConnectClient,
-                    calorieViewModel = HealthConnectViewModel(
-                        SaveFitnessRepositoryImpl(
-                            FitnessRemoteDataSource()
-                        )
-                    ),
+                    calorieViewModel =
+                        HealthConnectViewModel(
+                            SaveFitnessRepositoryImpl(
+                                FitnessRemoteDataSource(),
+                            ),
+                        ),
                 )
             }
             composable(Screen.EncounterList.route) {

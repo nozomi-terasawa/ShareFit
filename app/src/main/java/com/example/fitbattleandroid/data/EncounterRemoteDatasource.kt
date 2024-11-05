@@ -31,6 +31,10 @@ class EncounterRemoteDatasource {
             client.post("http://192.168.224.234:7070/api/v1/geofence/entry") {
                 contentType(ContentType.Application.Json)
                 setBody(entry)
+//                // TODO login/新規登録時のトークンをtokenに代入
+//                headers {
+//                    append("Authorization", "Bearer ${token}")
+//                }
             }
         // レスポンスからボディを取得して変数に追加
         val responseBody = res.body<EntryGeoFenceRes>()
