@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.fitbattleandroid.MyApplication
 import com.example.fitbattleandroid.repositoryImpl.AuthRepositoryImpl
 import com.example.fitbattleandroid.ui.common.Background
 import com.example.fitbattleandroid.ui.common.Body
@@ -34,6 +35,7 @@ fun LoginScreen(
 ) {
     val loginState = authViewModel.loginState
     val context = LocalContext.current
+    val applicationContext = context.applicationContext as MyApplication
     val scope = rememberCoroutineScope()
 
     Background {
@@ -66,11 +68,13 @@ fun LoginScreen(
                             when (authResult) {
                                 is AuthState.Loading -> {}
                                 is AuthState.Success -> {
-                                    authViewModel.saveAuthToken(
-                                        context,
-                                        authResult.token,
-                                    )
-                                    navController.navigate("main")
+                                    scope.launch {
+                                        authViewModel.saveAuthToken(
+                                            applicationContext,
+                                            authResult.token,
+                                        )
+                                        navController.navigate("main")
+                                    }
                                 }
                                 is AuthState.Error -> {}
                                 else -> {}

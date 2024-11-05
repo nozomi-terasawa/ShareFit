@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.fitbattleandroid.MyApplication
 import com.example.fitbattleandroid.repositoryImpl.AuthRepositoryImpl
 import com.example.fitbattleandroid.ui.common.Background
 import com.example.fitbattleandroid.ui.common.Body
@@ -35,6 +36,7 @@ fun RegistrationScreen(
 ) {
     val registerState = authViewModel.registerState
     val context = LocalContext.current
+    val applicationContext = context.applicationContext as MyApplication
     val scope = rememberCoroutineScope()
 
     Background {
@@ -77,11 +79,13 @@ fun RegistrationScreen(
                                 )
                             when (authResult) {
                                 is AuthState.Success -> {
-                                    navController.navigate("main")
-                                    authViewModel.saveAuthToken(
-                                        context,
-                                        authResult.token,
-                                    )
+                                    scope.launch {
+                                        authViewModel.saveAuthToken(
+                                            applicationContext,
+                                            authResult.token,
+                                        )
+                                        navController.navigate("main")
+                                    }
                                 }
                                 else -> {}
                             }
