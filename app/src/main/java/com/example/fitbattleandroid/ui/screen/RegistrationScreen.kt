@@ -1,8 +1,10 @@
 package com.example.fitbattleandroid.ui.screen
 
+import android.app.Application
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,16 +25,17 @@ import com.example.fitbattleandroid.ui.navigation.Screen
 import com.example.fitbattleandroid.viewmodel.AuthState
 import com.example.fitbattleandroid.viewmodel.AuthViewModel
 import com.example.fitbattleandroid.viewmodel.toUserCreateReq
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegistrationScreen(
     navController: NavController,
     authViewModel: AuthViewModel,
-    authState: AuthState,
     modifier: Modifier = Modifier,
 ) {
     val registerState = authViewModel.registerState
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     Background {
         Header {
@@ -67,18 +70,21 @@ fun RegistrationScreen(
 
                 NormalBottom(
                     onClick = {
-                        authViewModel.register(
-                            userCreateReq = registerState.toUserCreateReq(),
-                        )
-                        when (authState) {
-                            is AuthState.Success -> {
-                                navController.navigate("main")
-                                authViewModel.saveAuthToken(
-                                    context,
-                                    authState.token,
+                        scope.launch {
+                            val authResult =
+                                authViewModel.register(
+                                    userCreateReq = registerState.toUserCreateReq(),
                                 )
+                            when (authResult) {
+                                is AuthState.Success -> {
+                                    navController.navigate("main")
+                                    authViewModel.saveAuthToken(
+                                        context,
+                                        authResult.token,
+                                    )
+                                }
+                                else -> {}
                             }
-                            else -> return@NormalBottom
                         }
                     },
                 ) {
@@ -105,8 +111,11 @@ fun RegistrationScreen(
 fun RegistrationScreenPreview(modifier: Modifier = Modifier) {
     RegistrationScreen(
         navController = rememberNavController(),
-        authViewModel = AuthViewModel(AuthRepositoryImpl()),
-        authState = AuthState.Loading,
+        authViewModel =
+            AuthViewModel(
+                LocalContext.current.applicationContext as Application,
+                AuthRepositoryImpl(),
+            ),
         modifier = modifier,
     )
 }

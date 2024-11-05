@@ -52,36 +52,38 @@ class AuthViewModel(
 
     fun isEmailValid(email: String): Boolean = email.isEmailValid()
 
-    fun register(userCreateReq: UserCreateReq) {
-        viewModelScope.launch {
-            try {
-                val result = authRepository.register(userCreateReq)
+    suspend fun register(userCreateReq: UserCreateReq): AuthState {
+        _authState.value = AuthState.Loading
+        return try {
+            val result = authRepository.register(userCreateReq)
+            val successState =
                 AuthState.Success(
                     token = result.token,
                     userId = result.userId,
                 )
-            } catch (e: Exception) {
-                AuthState.Error
-                Log.d("result", e.toString())
-            }
+            _authState.value = successState
+            successState
+        } catch (e: Exception) {
+            Log.d("result", e.toString())
+            AuthState.Error
         }
     }
 
-    fun login(userLoginReq: UserLoginReq) {
+    suspend fun login(userLoginReq: UserLoginReq): AuthState {
         _authState.value = AuthState.Loading
-        viewModelScope.launch {
-            try {
-                val result = authRepository.login(userLoginReq)
-                _authState.value =
-                    AuthState.Success(
-                        token = result.token,
-                        userId = result.userId,
-                    )
-            } catch (e: Exception) {
-                Log.d("result", e.toString())
-
-                _authState.value = AuthState.Error
-            }
+        return try {
+            val result = authRepository.login(userLoginReq)
+            val successState =
+                AuthState.Success(
+                    token = result.token,
+                    userId = result.userId,
+                )
+            _authState.value = successState
+            successState
+        } catch (e: Exception) {
+            Log.d("result", e.toString())
+            _authState.value = AuthState.Error
+            AuthState.Error
         }
     }
 

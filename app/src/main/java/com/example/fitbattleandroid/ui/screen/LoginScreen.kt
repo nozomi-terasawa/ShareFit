@@ -1,10 +1,10 @@
 package com.example.fitbattleandroid.ui.screen
 
+import android.app.Application
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,15 +25,16 @@ import com.example.fitbattleandroid.ui.navigation.Screen
 import com.example.fitbattleandroid.viewmodel.AuthState
 import com.example.fitbattleandroid.viewmodel.AuthViewModel
 import com.example.fitbattleandroid.viewmodel.toUserLoginReq
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
     navController: NavController,
     authViewModel: AuthViewModel,
-    authState: AuthState,
 ) {
     val loginState = authViewModel.loginState
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     Background {
         Header {
@@ -60,19 +61,20 @@ fun LoginScreen(
 
                 NormalBottom(
                     onClick = {
-                        authViewModel.login(authViewModel.loginState.toUserLoginReq())
-                        when (authState) {
-                            is AuthState.Loading -> { }
-                            is AuthState.Success -> {
-                                authViewModel.saveAuthToken(
-                                    context,
-                                    authState.token,
-                                )
-                                navController.navigate("main")
+                        scope.launch {
+                            val authResult = authViewModel.login(authViewModel.loginState.toUserLoginReq())
+                            when (authResult) {
+                                is AuthState.Loading -> {}
+                                is AuthState.Success -> {
+                                    authViewModel.saveAuthToken(
+                                        context,
+                                        authResult.token,
+                                    )
+                                    navController.navigate("main")
+                                }
+                                is AuthState.Error -> {}
+                                else -> {}
                             }
-                            is AuthState.Error -> {
-                            }
-                            else -> {}
                         }
                     },
                 ) {
@@ -99,7 +101,10 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     LoginScreen(
         navController = rememberNavController(),
-        authViewModel = AuthViewModel(AuthRepositoryImpl()),
-        authState = AuthState.Loading,
+        authViewModel =
+            AuthViewModel(
+                LocalContext.current.applicationContext as Application,
+                AuthRepositoryImpl(),
+            ),
     )
 }

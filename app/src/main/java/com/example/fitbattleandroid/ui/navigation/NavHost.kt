@@ -79,7 +79,6 @@ fun App(
     authViewModel: AuthViewModel = AuthViewModel(AuthRepositoryImpl()),
 ) {
     val navController = rememberNavController()
-    val authState = authViewModel.authState.collectAsState().value
 
     NavHost(
         navController,
@@ -90,7 +89,6 @@ fun App(
             LoginScreen(
                 navController,
                 authViewModel = authViewModel,
-                authState = authState,
             )
         }
         composable(Screen.Regi.route) {
