@@ -8,9 +8,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class HealthDataApiViewModel(
+class GeofenceMapViewModel(
+    application: MyApplication,
     private val repository: GeofenceEntryRepositoryImpl,
-) : ViewModel() {
+) : AndroidViewModel(application) {
     private val _geofenceEntryState = MutableStateFlow<GeofenceEntryState>(GeofenceEntryState.Loading)
     val geofenceEntryState: StateFlow<GeofenceEntryState> = _geofenceEntryState.asStateFlow()
 
