@@ -69,7 +69,8 @@ class MainActivity : ComponentActivity() {
         }
         // TODO Android8以前のデバイスにはヘルスコネクトのインストールを要求しない
         if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED) {
-            val uriString = "market://details?id=$providerPackageName&url=healthconnect%3A%2F%2Fonboarding"
+            val uriString =
+                "market://details?id=$providerPackageName&url=healthconnect%3A%2F%2Fonboarding"
             this.startActivity(
                 Intent(Intent.ACTION_VIEW).apply {
                     setPackage("com.android.vending")
@@ -160,10 +161,22 @@ class MainActivity : ComponentActivity() {
 
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
         task.addOnSuccessListener { response ->
-            Log.d(PERMISSION_SETTING_TAG, "GPS Enabled: ${response.locationSettingsStates?.isGpsUsable}") // GPSが有効かどうか
-            Log.d(PERMISSION_SETTING_TAG, "Network Location Enabled: ${response.locationSettingsStates?.isNetworkLocationUsable}") // ネットワーク位置情報が有効かどうか
-            Log.d(PERMISSION_SETTING_TAG, "Ble Location Enabled: ${response.locationSettingsStates?.isBleUsable}") // BLE位置情報が有効かどうか
-            Log.d(PERMISSION_SETTING_TAG, "Location Settings are satisfied: ${response.locationSettingsStates?.isLocationUsable}") // 位置情報が有効かどうか
+            Log.d(
+                PERMISSION_SETTING_TAG,
+                "GPS Enabled: ${response.locationSettingsStates?.isGpsUsable}",
+            ) // GPSが有効かどうか
+            Log.d(
+                PERMISSION_SETTING_TAG,
+                "Network Location Enabled: ${response.locationSettingsStates?.isNetworkLocationUsable}",
+            ) // ネットワーク位置情報が有効かどうか
+            Log.d(
+                PERMISSION_SETTING_TAG,
+                "Ble Location Enabled: ${response.locationSettingsStates?.isBleUsable}",
+            ) // BLE位置情報が有効かどうか
+            Log.d(
+                PERMISSION_SETTING_TAG,
+                "Location Settings are satisfied: ${response.locationSettingsStates?.isLocationUsable}",
+            ) // 位置情報が有効かどうか
         }
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
