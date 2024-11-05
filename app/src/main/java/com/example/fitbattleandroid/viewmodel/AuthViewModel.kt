@@ -1,10 +1,12 @@
 package com.example.fitbattleandroid.viewmodel
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fitbattleandroid.MyApplication
 import com.example.fitbattleandroid.data.datastore.DataStoreManager
 import com.example.fitbattleandroid.data.remote.auth.UserCreateReq
 import com.example.fitbattleandroid.data.remote.auth.UserLoginReq
@@ -16,8 +18,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
+    application: Application,
     private val authRepository: AuthRepository,
-) : ViewModel() {
+) : AndroidViewModel(application) {
     private var _registerState = mutableStateOf(RegisterState("", "", ""))
     val registerState: RegisterState
         get() = _registerState.value
@@ -95,12 +98,16 @@ class AuthViewModel(
         viewModelScope.launch {
             DataStoreManager.saveAuthToken(context, token)
         }
+        getAuthToken(context)
     }
 
     // トークンを取得
-    fun getAuthToken(context: Context) {
+    // アプリを開いた時（新規登録・ログイン後、またはそのスキップ後）に一度だけ呼び出し
+    private fun getAuthToken(context: Context) {
         viewModelScope.launch {
-            DataStoreManager.getAuthToken(context)
+            DataStoreManager.getAuthToken(context).collect { token ->
+                (getApplication() as MyApplication).userToken = token
+            }
         }
     }
 }

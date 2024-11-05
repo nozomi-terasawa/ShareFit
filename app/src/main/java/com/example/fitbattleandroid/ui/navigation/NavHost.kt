@@ -1,5 +1,6 @@
 package com.example.fitbattleandroid.ui.navigation
 
+import android.app.Application
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
@@ -19,6 +20,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.health.connect.client.HealthConnectClient
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -76,7 +78,8 @@ fun App(
     mapViewModel: MapViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
     healthConnectClient: HealthConnectClient,
-    authViewModel: AuthViewModel = AuthViewModel(AuthRepositoryImpl()),
+    context: Application = LocalContext.current.applicationContext as Application,
+    authViewModel: AuthViewModel = AuthViewModel(context, AuthRepositoryImpl()),
 ) {
     val navController = rememberNavController()
 
@@ -95,7 +98,6 @@ fun App(
             RegistrationScreen(
                 navController,
                 authViewModel = authViewModel,
-                authState = authState,
             )
         }
         composable("main") {
