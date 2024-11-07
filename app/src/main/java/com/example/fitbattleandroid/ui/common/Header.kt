@@ -4,10 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.TopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,22 +31,29 @@ fun Header(content: @Composable () -> Unit) {
                 .fillMaxSize()
                 .imePadding(),
     ) {
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .background(primaryContainerDarkMediumContrast)
-                    .padding(16.dp),
-            contentAlignment = Alignment.Center,
+        TopAppBar(
+            backgroundColor = primaryContainerDarkMediumContrast,
+            contentColor = onPrimaryDark,
+            modifier = Modifier.fillMaxWidth(),
+            elevation = 4.dp,
         ) {
-            Text(
-                text = "Share Fit",
-                style =
-                    MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = onPrimaryDark,
-                    ),
-            )
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = "Share Fit",
+                    style =
+                        MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = onPrimaryDark,
+                        ),
+                )
+            }
         }
 
         content()
@@ -52,7 +61,7 @@ fun Header(content: @Composable () -> Unit) {
 }
 
 @Composable
-fun Body(content: @Composable () -> Unit) {
+fun Body(content: @Composable () -> Unit)  {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,7 +75,7 @@ fun Body(content: @Composable () -> Unit) {
 
 @Composable
 @Preview
-fun HeaderPreview() {
+fun HeaderPreview()  {
     Header {
         Body {
             Text("Hello")
