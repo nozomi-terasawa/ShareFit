@@ -4,11 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.TopAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,38 +24,44 @@ import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
 
 @Composable
-fun Header(
-    content: @Composable () -> Unit
-){
+fun Header(content: @Composable () -> Unit) {
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
-            .imePadding(),
+            .imePadding()
     ) {
-        Box(
-            modifier =
-            Modifier
-                .fillMaxWidth()
-                .background(primaryContainerDarkMediumContrast)
-                .padding(16.dp),
-            contentAlignment = Alignment.Center,
+        TopAppBar(
+            backgroundColor = primaryContainerDarkMediumContrast,
+            contentColor = onPrimaryDark,
+            modifier = Modifier.fillMaxWidth(),
+            elevation = 4.dp
         ) {
-            Text(
-                text = "Share Fit",
-                style =
-                MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = onPrimaryDark,
-                ),
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Share Fit",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = onPrimaryDark
+                    )
+                )
+            }
         }
 
         content()
     }
 }
+
+
+
+
 
 @Composable
 fun Body(
