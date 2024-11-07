@@ -35,7 +35,7 @@ import com.example.fitbattleandroid.model.LocationData
 import com.example.fitbattleandroid.ui.permissioncheck.LocationPermissionRequest
 import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
-import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
+import com.example.fitbattleandroid.viewmodel.GeofenceMapViewModel
 import com.example.fitbattleandroid.viewmodel.MapViewModel
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.maps.model.CameraPosition
@@ -56,7 +56,7 @@ fun MapScreen(
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
     mapViewModel: MapViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
-    healthDataApiViewModel: HealthDataApiViewModel,
+    geofenceMapViewModel: GeofenceMapViewModel,
 ) {
     val locationData = mapViewModel.location.collectAsState().value
     val geofenceList = mapViewModel.geofenceList
@@ -120,14 +120,13 @@ fun MapScreen(
                     mapViewModel.addGeofence()
                     mapViewModel.registerGeofence()
                     scope.launch(Dispatchers.IO) {
-                        val response =
-                            healthDataApiViewModel.sendGeoFenceEntryRequest(
-                                EntryGeoFenceReq(
-                                    userId = 12,
-                                    geoFenceId = 2,
-                                    entryTime = "2021-10-01T10:00:00.391Z",
-                                ),
-                            )
+                        geofenceMapViewModel.sendGeoFenceEntryRequest(
+                            EntryGeoFenceReq(
+                                userId = 12,
+                                geoFenceId = 2,
+                                entryTime = "2021-10-01T10:00:00.391Z",
+                            ),
+                        )
                     }
                 }
             },
