@@ -1,35 +1,17 @@
 package com.example.fitbattleandroid.ui.screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import android.app.Application
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.fitbattleandroid.repositoryImpl.AuthRepositoryImpl
 import com.example.fitbattleandroid.ui.common.Background
 import com.example.fitbattleandroid.ui.common.Body
 import com.example.fitbattleandroid.ui.common.CommonOutlinedTextField
@@ -40,41 +22,72 @@ import com.example.fitbattleandroid.ui.common.NormalText
 import com.example.fitbattleandroid.ui.common.TitleText
 import com.example.fitbattleandroid.ui.common.TransparentBottom
 import com.example.fitbattleandroid.ui.navigation.Screen
-import com.example.fitbattleandroid.ui.theme.onPrimaryDark
-import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
-import com.example.fitbattleandroid.ui.theme.primaryContainerLight
+import com.example.fitbattleandroid.viewmodel.AuthState
+import com.example.fitbattleandroid.viewmodel.AuthViewModel
+import com.example.fitbattleandroid.viewmodel.toUserLoginReq
+import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun LoginScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel,
+) {
+    val loginState = authViewModel.loginState
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     Background {
         Header {
             Body {
-
                 TitleText("ログイン")
 
                 Spacer(modifier = Modifier.size(50.dp))
 
                 CommonOutlinedTextField(
-                    value = email,
+                    value = loginState.email,
                     label = "メールアドレス",
-                    onValueChange = { email = it },
+                    onValueChange = { newValue ->
+                        authViewModel.updateLoginTextField("email", newValue)
+                    },
                 )
 
                 CommonOutlinedTextField(
-                    value = password,
+                    value = loginState.password,
                     label = "パスワード",
-                    onValueChange = { password = it },
+                    onValueChange = { newValue ->
+                        authViewModel.updateLoginTextField("password", newValue)
+                    },
                 )
 
-                NormalBottom({ navController.navigate("main") }) {
+                NormalBottom(
+                    onClick = {
+                        scope.launch {
+                            val authResult = authViewModel.login(authViewModel.loginState.toUserLoginReq())
+                            when (authResult) {
+                                is AuthState.Loading -> {}
+                                is AuthState.Success -> {
+                                    authViewModel.saveAuthToken(
+                                        context,
+                                        authResult.token,
+                                    )
+                                    navController.navigate("main")
+                                }
+                                is AuthState.Error -> {}
+                                else -> {}
+                            }
+                        }
+                    },
+                ) {
                     NormalText("ログイン")
                 }
 
-                TransparentBottom({navController.navigate(Screen.Regi.route) { popUpTo(Screen.Login.route) { inclusive = true }
-                        launchSingleTop = true }}
+                TransparentBottom(
+                    {
+                        navController.navigate(Screen.Regi.route) {
+                            popUpTo(Screen.Login.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
                 ) {
                     MinText("新規登録の方はこちら")
                 }
@@ -86,5 +99,12 @@ fun LoginScreen(navController: NavController) {
 @Composable
 @Preview
 fun LoginScreenPreview() {
-    LoginScreen(navController = rememberNavController())
+    LoginScreen(
+        navController = rememberNavController(),
+        authViewModel =
+            AuthViewModel(
+                LocalContext.current.applicationContext as Application,
+                AuthRepositoryImpl(),
+            ),
+    )
 }

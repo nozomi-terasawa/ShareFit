@@ -6,6 +6,8 @@ import android.os.Build
 import com.example.fitbattleandroid.notification.createNotificationChannels
 
 class MyApplication : Application() {
+    var userToken: String? = null
+
     override fun onCreate() {
         super.onCreate()
         val notificationManager: NotificationManager =

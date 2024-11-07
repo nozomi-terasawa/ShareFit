@@ -1,4 +1,4 @@
-package com.example.fitbattleandroid.data
+package com.example.fitbattleandroid.data.remote
 
 import kotlinx.serialization.Serializable
 

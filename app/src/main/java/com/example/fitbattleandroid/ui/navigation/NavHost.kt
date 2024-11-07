@@ -1,5 +1,6 @@
 package com.example.fitbattleandroid.ui.navigation
 
+import android.app.Application
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
@@ -19,6 +20,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.health.connect.client.HealthConnectClient
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -27,16 +29,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.fitbattleandroid.data.EncounterRemoteDatasource
+import com.example.fitbattleandroid.data.FitnessRemoteDataSource
+import com.example.fitbattleandroid.repositoryImpl.AuthRepositoryImpl
+import com.example.fitbattleandroid.repositoryImpl.GeofenceEntryRepositoryImpl
+import com.example.fitbattleandroid.repositoryImpl.SaveFitnessRepositoryImpl
 import com.example.fitbattleandroid.ui.screen.EncounterHistoryScreen
 import com.example.fitbattleandroid.ui.screen.FitnessMemory
 import com.example.fitbattleandroid.ui.screen.LoginScreen
 import com.example.fitbattleandroid.ui.screen.MapScreen
 import com.example.fitbattleandroid.ui.screen.RegistrationScreen
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
-import com.example.fitbattleandroid.viewmodel.GeofencingClientViewModel
+import com.example.fitbattleandroid.viewmodel.AuthViewModel
 import com.example.fitbattleandroid.viewmodel.HealthConnectViewModel
 import com.example.fitbattleandroid.viewmodel.HealthDataApiViewModel
-import com.example.fitbattleandroid.viewmodel.LocationViewModel
+import com.example.fitbattleandroid.viewmodel.MapViewModel
 import com.websarva.wings.android.myapplication.TopScreen
 
 sealed class Screen(
@@ -68,26 +75,39 @@ val items =
 fun App(
     modifier: Modifier,
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
-    locationViewModel: LocationViewModel,
-    geofenceViewModel: GeofencingClientViewModel = viewModel(),
-    dataApiViewModel: HealthDataApiViewModel = viewModel(),
+    mapViewModel: MapViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
     healthConnectClient: HealthConnectClient,
+    context: Application = LocalContext.current.applicationContext as Application,
+    authViewModel: AuthViewModel = AuthViewModel(context, AuthRepositoryImpl()),
 ) {
     val navController = rememberNavController()
+
     NavHost(
         navController,
         startDestination = Screen.Top.route,
     ) {
         composable(Screen.Top.route) { TopScreen(navController) }
-        composable(Screen.Login.route) { LoginScreen(navController) }
-        composable(Screen.Regi.route) { RegistrationScreen(navController) }
+        composable(Screen.Login.route) {
+            LoginScreen(
+                navController,
+                authViewModel = authViewModel,
+            )
+        }
+        composable(Screen.Regi.route) {
+            RegistrationScreen(
+                navController,
+                authViewModel = authViewModel,
+            )
+        }
         composable("main") {
             MainNavigation(
                 requestPermissionLauncher,
-                locationViewModel,
-                geofenceViewModel,
-                dataApiViewModel,
+                mapViewModel,
+                dataAPIViewModel =
+                    viewModel {
+                        HealthDataApiViewModel(GeofenceEntryRepositoryImpl(EncounterRemoteDatasource()))
+                    },
                 backgroundPermissionGranted,
                 healthConnectClient,
             )
@@ -99,8 +119,7 @@ fun App(
 @Composable
 fun MainNavigation(
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
-    locationViewModel: LocationViewModel,
-    geofenceViewModel: GeofencingClientViewModel,
+    mapViewModel: MapViewModel,
     dataAPIViewModel: HealthDataApiViewModel,
     backgroundPermissionGranted: MutableState<Boolean>,
     healthConnectClient: HealthConnectClient,
@@ -164,8 +183,7 @@ fun MainNavigation(
                 MapScreen(
                     Modifier.padding(innerPadding),
                     requestPermissionLauncher,
-                    locationViewModel,
-                    geofenceViewModel,
+                    mapViewModel,
                     backgroundPermissionGranted,
                     healthDataApiViewModel = dataAPIViewModel,
                 )
@@ -174,15 +192,20 @@ fun MainNavigation(
                 FitnessMemory(
                     modifier = Modifier,
                     healthConnectClient,
-                    calorieViewModel = HealthConnectViewModel(), // TODO みろ！
+                    calorieViewModel =
+                        HealthConnectViewModel(
+                            SaveFitnessRepositoryImpl(
+                                FitnessRemoteDataSource(),
+                            ),
+                        ),
                 )
             }
             composable(Screen.EncounterList.route) {
-                val encounterHistoryList by dataAPIViewModel.encounterMembers.collectAsState()
+                val geofenceEntryState = dataAPIViewModel.geofenceEntryState.collectAsState().value
+
                 EncounterHistoryScreen(
                     modifier = Modifier,
-                    list = encounterHistoryList,
-                    // encounterHistoryList,
+                    geofenceEntryState = geofenceEntryState,
                 )
             }
         }

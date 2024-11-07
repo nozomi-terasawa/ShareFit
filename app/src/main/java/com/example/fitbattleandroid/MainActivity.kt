@@ -23,7 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.fitbattleandroid.ui.navigation.App
 import com.example.fitbattleandroid.ui.screen.isBackgroundLocationPermissionGranted
 import com.example.fitbattleandroid.ui.theme.FitBattleAndroidTheme
-import com.example.fitbattleandroid.viewmodel.LocationViewModel
+import com.example.fitbattleandroid.viewmodel.MapViewModel
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-    private val locationViewModel: LocationViewModel by viewModels()
+    private val mapViewModel: MapViewModel by viewModels()
     private val backgroundPermissionGranted = mutableStateOf(false)
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -69,7 +69,8 @@ class MainActivity : ComponentActivity() {
         }
         // TODO Android8以前のデバイスにはヘルスコネクトのインストールを要求しない
         if (availabilityStatus == HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED) {
-            val uriString = "market://details?id=$providerPackageName&url=healthconnect%3A%2F%2Fonboarding"
+            val uriString =
+                "market://details?id=$providerPackageName&url=healthconnect%3A%2F%2Fonboarding"
             this.startActivity(
                 Intent(Intent.ACTION_VIEW).apply {
                     setPackage("com.android.vending")
@@ -88,7 +89,7 @@ class MainActivity : ComponentActivity() {
         }
 
         // 位置情報の設定を確認
-        checkLocationSettings(locationViewModel)
+        checkLocationSettings(mapViewModel)
 
         val requestPermissionLauncher =
             registerForActivityResult(
@@ -115,7 +116,7 @@ class MainActivity : ComponentActivity() {
                         Modifier
                             .fillMaxSize(),
                     requestPermissionLauncher = requestPermissionLauncher,
-                    locationViewModel = locationViewModel,
+                    mapViewModel = mapViewModel,
                     backgroundPermissionGranted = backgroundPermissionGranted,
                     healthConnectClient = healthConnectClient,
                 )
@@ -151,19 +152,31 @@ class MainActivity : ComponentActivity() {
          */
     }
 
-    private fun checkLocationSettings(locationViewModel: LocationViewModel) {
+    private fun checkLocationSettings(mapViewModel: MapViewModel) {
         val builder =
             LocationSettingsRequest
                 .Builder()
-                .addLocationRequest(locationViewModel.locationRequest)
+                .addLocationRequest(mapViewModel.locationRequest)
         val client: SettingsClient = LocationServices.getSettingsClient(this)
 
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
         task.addOnSuccessListener { response ->
-            Log.d(PERMISSION_SETTING_TAG, "GPS Enabled: ${response.locationSettingsStates?.isGpsUsable}") // GPSが有効かどうか
-            Log.d(PERMISSION_SETTING_TAG, "Network Location Enabled: ${response.locationSettingsStates?.isNetworkLocationUsable}") // ネットワーク位置情報が有効かどうか
-            Log.d(PERMISSION_SETTING_TAG, "Ble Location Enabled: ${response.locationSettingsStates?.isBleUsable}") // BLE位置情報が有効かどうか
-            Log.d(PERMISSION_SETTING_TAG, "Location Settings are satisfied: ${response.locationSettingsStates?.isLocationUsable}") // 位置情報が有効かどうか
+            Log.d(
+                PERMISSION_SETTING_TAG,
+                "GPS Enabled: ${response.locationSettingsStates?.isGpsUsable}",
+            ) // GPSが有効かどうか
+            Log.d(
+                PERMISSION_SETTING_TAG,
+                "Network Location Enabled: ${response.locationSettingsStates?.isNetworkLocationUsable}",
+            ) // ネットワーク位置情報が有効かどうか
+            Log.d(
+                PERMISSION_SETTING_TAG,
+                "Ble Location Enabled: ${response.locationSettingsStates?.isBleUsable}",
+            ) // BLE位置情報が有効かどうか
+            Log.d(
+                PERMISSION_SETTING_TAG,
+                "Location Settings are satisfied: ${response.locationSettingsStates?.isLocationUsable}",
+            ) // 位置情報が有効かどうか
         }
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
