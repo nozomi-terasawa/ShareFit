@@ -1,17 +1,13 @@
 package com.example.fitbattleandroid.ui.common
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.TopAppBar
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,29 +24,32 @@ fun Header(content: @Composable () -> Unit) {
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .imePadding()
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .imePadding(),
     ) {
         TopAppBar(
             backgroundColor = primaryContainerDarkMediumContrast,
             contentColor = onPrimaryDark,
             modifier = Modifier.fillMaxWidth(),
-            elevation = 4.dp
+            elevation = 4.dp,
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
             ) {
                 Text(
                     text = "Share Fit",
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = onPrimaryDark
-                    )
+                    style =
+                        MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = onPrimaryDark,
+                        ),
                 )
             }
         }
@@ -59,20 +58,14 @@ fun Header(content: @Composable () -> Unit) {
     }
 }
 
-
-
-
-
 @Composable
-fun Body(
-    content: @Composable () -> Unit
-){
+fun Body(content: @Composable () -> Unit)  {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier =
-        Modifier
-            .fillMaxSize()
+            Modifier
+                .fillMaxSize(),
     ) {
         content()
     }
@@ -80,12 +73,10 @@ fun Body(
 
 @Composable
 @Preview
-fun HeaderPreview(){
-
-    Header(){
+fun HeaderPreview()  {
+    Header {
         Body {
             Text("Hello")
         }
     }
-
 }
