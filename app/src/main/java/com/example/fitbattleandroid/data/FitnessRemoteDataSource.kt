@@ -30,7 +30,7 @@ class FitnessRemoteDataSource {
         request: SaveFitnessReq,
         userToken: String,
     ) {
-        client.post("http://192.168.224.234:7070/api/v1/fitness/save") {
+        client.post("http://192.168.11.3:7070/api/v1/fitness/save") {
             headers {
                 append(HttpHeaders.Authorization, "Bearer $userToken")
             }

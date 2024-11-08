@@ -10,21 +10,16 @@ import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.lifecycle.AndroidViewModel
 import com.example.fitbattleandroid.MyApplication
-import com.example.fitbattleandroid.data.remote.SaveFitnessReq
-import com.example.fitbattleandroid.repositoryImpl.SaveFitnessRepositoryImpl
 import java.time.Instant
 
 class HealthConnectViewModel(
     application: MyApplication,
-    private val saveFitnessRepository: SaveFitnessRepositoryImpl,
 ) : AndroidViewModel(application) {
     private var _calorieUiState: MutableState<CalorieUiState> = mutableStateOf(CalorieUiState("0"))
     val calorieUiState: State<CalorieUiState> = _calorieUiState
 
     private var _saveHealthDataState: MutableState<SaveHealthDataState> = mutableStateOf(SaveHealthDataState.Loading)
     val saveHealthDataState: State<SaveHealthDataState> = _saveHealthDataState
-
-    private val userToken = (getApplication() as MyApplication).userToken
 
     // ローカルからカロリーを取得
     suspend fun readCalorie(
@@ -49,20 +44,6 @@ class HealthConnectViewModel(
                 )
         } catch (e: Exception) {
             _calorieUiState.value = CalorieUiState("Error reading calorie data")
-        }
-    }
-
-    suspend fun saveFitnessData(fitnessReq: SaveFitnessReq) {
-        try {
-            if (userToken == null) {
-                _saveHealthDataState.value = SaveHealthDataState.Error
-                return
-            }
-            saveFitnessRepository.saveFitnessData(fitnessReq, userToken)
-            _saveHealthDataState.value = SaveHealthDataState.Success
-        } catch (e: Exception) {
-            e.printStackTrace()
-            _saveHealthDataState.value = SaveHealthDataState.Error
         }
     }
 }
