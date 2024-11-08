@@ -60,15 +60,9 @@ fun RegistrationScreen(
                         authViewModel.updateRegisterTextField("email", newValue)
                     },
                     label = "メールアドレス",
+                    isError = showEmailError,
+                    errorText = if (showEmailError) "メールアドレスを入力してください" else null
                 )
-                // メールアドレスが空白の場合にエラーメッセージを表示
-                if (showEmailError) {
-                    Text(
-                        text = "メールアドレスを入力してください",
-                        color = Color.Red,
-                        fontSize = 12.sp
-                    )
-                }
 
                 // パスワード入力フィールド
                 CommonOutlinedTextField(
@@ -77,15 +71,9 @@ fun RegistrationScreen(
                     onValueChange = { newValue ->
                         authViewModel.updateRegisterTextField("password", newValue)
                     },
+                    isError = showPasswordError,
+                    errorText = if (showPasswordError) "パスワードを入力してください" else null
                 )
-                // パスワードが空白の場合にエラーメッセージを表示
-                if (showPasswordError) {
-                    Text(
-                        text = "パスワードを入力してください",
-                        color = Color.Red,
-                        fontSize = 12.sp
-                    )
-                }
 
                 // 名前入力フィールド
                 CommonOutlinedTextField(
@@ -94,15 +82,9 @@ fun RegistrationScreen(
                     onValueChange = { newValue ->
                         authViewModel.updateRegisterTextField("userName", newValue)
                     },
+                    isError = showNameError,
+                    errorText = if (showNameError) "名前を入力してください" else null
                 )
-                // 名前が空白の場合にエラーメッセージを表示
-                if (showNameError) {
-                    Text(
-                        text = "名前を入力してください",
-                        color = Color.Red,
-                        fontSize = 12.sp
-                    )
-                }
 
                 NormalBottom(
                     onClick = {

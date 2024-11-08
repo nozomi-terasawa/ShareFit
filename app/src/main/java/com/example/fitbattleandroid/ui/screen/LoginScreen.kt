@@ -58,15 +58,9 @@ fun LoginScreen(
                     onValueChange = { newValue ->
                         authViewModel.updateLoginTextField("email", newValue)
                     },
+                    isError = showEmailError,
+                    errorText = "メールアドレスを入力してください"
                 )
-                // メールアドレスが空白の場合にエラーメッセージを表示
-                if (showEmailError) {
-                    Text(
-                        text = "メールアドレスを入力してください",
-                        color = Color.Red,
-                        fontSize = 12.sp
-                    )
-                }
 
                 // パスワード入力フィールド
                 CommonOutlinedTextField(
@@ -75,16 +69,10 @@ fun LoginScreen(
                     onValueChange = { newValue ->
                         authViewModel.updateLoginTextField("password", newValue)
                     },
+                    // パスワードが空白の場合にエラーメッセージを表示
+                    isError = showPasswordError,
+                    errorText = "パスワードを入力してください"
                 )
-                // パスワードが空白の場合にエラーメッセージを表示
-                if (showPasswordError) {
-                    Text(
-                        text = "パスワードを入力してください",
-                        color = Color.Red,
-                        fontSize = 12.sp
-                    )
-                }
-
                 NormalBottom(
                     onClick = {
                         // 入力チェック
