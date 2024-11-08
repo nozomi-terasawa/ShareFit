@@ -3,12 +3,14 @@ package com.example.fitbattleandroid.ui.screen
 import android.app.Application
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.MyApplication
@@ -38,6 +40,10 @@ fun LoginScreen(
     val applicationContext = context.applicationContext as MyApplication
     val scope = rememberCoroutineScope()
 
+    // エラー表示用の状態
+    var showEmailError by remember { mutableStateOf(false) }
+    var showPasswordError by remember { mutableStateOf(false) }
+
     Background {
         Header {
             Body {
@@ -45,6 +51,7 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.size(50.dp))
 
+                // メールアドレス入力フィールド
                 CommonOutlinedTextField(
                     value = loginState.email,
                     label = "メールアドレス",
@@ -52,7 +59,16 @@ fun LoginScreen(
                         authViewModel.updateLoginTextField("email", newValue)
                     },
                 )
+                // メールアドレスが空白の場合にエラーメッセージを表示
+                if (showEmailError) {
+                    Text(
+                        text = "メールアドレスを入力してください",
+                        color = Color.Red,
+                        fontSize = 12.sp
+                    )
+                }
 
+                // パスワード入力フィールド
                 CommonOutlinedTextField(
                     value = loginState.password,
                     label = "パスワード",
@@ -60,24 +76,39 @@ fun LoginScreen(
                         authViewModel.updateLoginTextField("password", newValue)
                     },
                 )
+                // パスワードが空白の場合にエラーメッセージを表示
+                if (showPasswordError) {
+                    Text(
+                        text = "パスワードを入力してください",
+                        color = Color.Red,
+                        fontSize = 12.sp
+                    )
+                }
 
                 NormalBottom(
                     onClick = {
-                        scope.launch {
-                            val authResult = authViewModel.login(authViewModel.loginState.toUserLoginReq())
-                            when (authResult) {
-                                is AuthState.Loading -> {}
-                                is AuthState.Success -> {
-                                    scope.launch {
-                                        authViewModel.saveAuthToken(
-                                            applicationContext,
-                                            authResult.token,
-                                        )
-                                        navController.navigate("main")
+                        // 入力チェック
+                        showEmailError = loginState.email.isBlank()
+                        showPasswordError = loginState.password.isBlank()
+
+                        // エラーがない場合にログイン処理を実行
+                        if (!showEmailError && !showPasswordError) {
+                            scope.launch {
+                                val authResult = authViewModel.login(authViewModel.loginState.toUserLoginReq())
+                                when (authResult) {
+                                    is AuthState.Loading -> {}
+                                    is AuthState.Success -> {
+                                        scope.launch {
+                                            authViewModel.saveAuthToken(
+                                                applicationContext,
+                                                authResult.token,
+                                            )
+                                            navController.navigate("main")
+                                        }
                                     }
+                                    is AuthState.Error -> {}
+                                    AuthState.Initial -> TODO()
                                 }
-                                is AuthState.Error -> {}
-                                else -> {}
                             }
                         }
                     },
@@ -106,9 +137,9 @@ fun LoginScreenPreview() {
     LoginScreen(
         navController = rememberNavController(),
         authViewModel =
-            AuthViewModel(
-                LocalContext.current.applicationContext as Application,
-                AuthRepositoryImpl(),
-            ),
+        AuthViewModel(
+            LocalContext.current.applicationContext as Application,
+            AuthRepositoryImpl(),
+        ),
     )
 }
