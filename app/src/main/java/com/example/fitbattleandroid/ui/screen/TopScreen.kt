@@ -22,7 +22,7 @@ fun TopScreen(navController: NavController) {
     Background {
         Header {
             Image(
-                painter = painterResource(R.drawable.title),
+                painter = painterResource(R.drawable.logo_border),
                 contentDescription = null,
                 modifier = Modifier.size(500.dp),
             )
