@@ -22,9 +22,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
+import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun Header(content: @Composable () -> Unit) {
+
+    val systemUiController = rememberSystemUiController()
+    val statusBarColors = primaryContainerDarkMediumContrast
+
+    systemUiController.setStatusBarColor(
+        color = statusBarColors,
+        darkIcons = true
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
