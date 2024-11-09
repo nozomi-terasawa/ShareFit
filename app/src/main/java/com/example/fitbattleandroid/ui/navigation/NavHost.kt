@@ -31,10 +31,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbattleandroid.MyApplication
 import com.example.fitbattleandroid.data.EncounterRemoteDatasource
-import com.example.fitbattleandroid.data.FitnessRemoteDataSource
 import com.example.fitbattleandroid.repositoryImpl.AuthRepositoryImpl
 import com.example.fitbattleandroid.repositoryImpl.GeofenceEntryRepositoryImpl
-import com.example.fitbattleandroid.repositoryImpl.SaveFitnessRepositoryImpl
 import com.example.fitbattleandroid.ui.screen.EncounterHistoryScreen
 import com.example.fitbattleandroid.ui.screen.FitnessMemory
 import com.example.fitbattleandroid.ui.screen.LoginScreen
@@ -198,9 +196,7 @@ fun MainNavigation(
                     healthConnectClient,
                     calorieViewModel =
                         HealthConnectViewModel(
-                            SaveFitnessRepositoryImpl(
-                                FitnessRemoteDataSource(),
-                            ),
+                            application = LocalContext.current.applicationContext as MyApplication,
                         ),
                 )
             }

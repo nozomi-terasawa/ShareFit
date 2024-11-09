@@ -36,14 +36,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.health.connect.client.HealthConnectClient
-import com.example.fitbattleandroid.data.FitnessRemoteDataSource
-import com.example.fitbattleandroid.repositoryImpl.SaveFitnessRepositoryImpl
+import com.example.fitbattleandroid.MyApplication
 import com.example.fitbattleandroid.ui.common.ShowCurrentTimeAndRemainingTime
 import com.example.fitbattleandroid.ui.theme.onPrimaryDark
 import com.example.fitbattleandroid.ui.theme.primaryContainerDarkMediumContrast
 import com.example.fitbattleandroid.viewmodel.HealthConnectViewModel
 import com.websarva.wings.android.myapplication.FireAnimeModule
-import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -144,6 +142,8 @@ fun FitnessMemory(
             ) {
                 Spacer(modifier = Modifier.size(550.dp))
 
+                /* TODO 押しても更新されているか分かりづらいので不要？
+                TODO もっと分かりやすい更新方法を実装
                 Button(
                     onClick = {
                         scope.launch {
@@ -165,6 +165,8 @@ fun FitnessMemory(
                         color = onPrimaryDark,
                     )
                 }
+
+                 */
 
                 ShowCurrentTimeAndRemainingTime(modifier)
 
@@ -293,15 +295,14 @@ fun CalorieMeter(
 @Composable
 fun FitnessMemoryPreview() {
     val context = LocalContext.current
+    val application = context.applicationContext
 
     FitnessMemory(
         modifier = Modifier,
         healthConnectClient = HealthConnectClient.getOrCreate(context),
         calorieViewModel =
             HealthConnectViewModel(
-                SaveFitnessRepositoryImpl(
-                    FitnessRemoteDataSource(),
-                ),
+                application = application as MyApplication,
             ),
     )
 }
